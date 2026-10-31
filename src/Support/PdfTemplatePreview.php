@@ -2,11 +2,11 @@
 
 namespace VentureDrake\LaravelCrmFilament\Support;
 
-use Barryvdh\DomPDF\Facade\Pdf;
 use VentureDrake\LaravelCrm\Support\PdfContactDetails;
 use VentureDrake\LaravelCrm\Support\PdfLogo;
 use VentureDrake\LaravelCrm\Support\PdfSampleData;
 use VentureDrake\LaravelCrm\Support\PdfTemplateRegistry;
+use VentureDrake\LaravelCrmFilament\Contracts\RendersPdf;
 
 /**
  * Renders a preview PDF of any (docType × template slug) pair against
@@ -47,10 +47,7 @@ class PdfTemplatePreview
         // without an explicit A4 portrait DomPDF falls through to its default
         // paper and leaves ~40% of the page blank. It looks like a bug in the
         // template.
-        return Pdf::setOption(['fontDir' => public_path('vendor/laravel-crm/fonts')])
-            ->setPaper('a4', 'portrait')
-            ->loadView(PdfTemplateRegistry::viewFor($docType, $slug), self::sampleData($docType))
-            ->output();
+        return app(RendersPdf::class)->render(PdfTemplateRegistry::viewFor($docType, $slug), self::sampleData($docType), 'a4', 'portrait');
     }
 
     public static function filename(string $docType, string $slug): string

@@ -91,7 +91,7 @@ trait HasEncryptedGlobalSearch
         }
 
         $model = static::getModel();
-        $instance = new $model;
+        $instance = app($model);
 
         if (! method_exists($instance, 'getEncryptable')) {
             return false;

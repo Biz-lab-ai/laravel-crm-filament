@@ -4,7 +4,7 @@ namespace VentureDrake\LaravelCrmFilament\Concerns;
 
 use Filament\Actions\Action;
 use Illuminate\Database\Eloquent\Model;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use VentureDrake\LaravelCrmFilament\Support\CrmPdf;
 
 /**
@@ -32,9 +32,9 @@ trait DownloadsPdf
     }
 
     /**
-     * Stream the generated PDF as an HTTP download response.
+     * Stream the PDF, rendered in memory, as an HTTP download response (no file).
      */
-    protected function streamPdfDownload(Model $record, string $type): BinaryFileResponse
+    protected function streamPdfDownload(Model $record, string $type): StreamedResponse
     {
         return CrmPdf::download($record, $type);
     }

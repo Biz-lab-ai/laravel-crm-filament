@@ -47,7 +47,7 @@ class ImportsCsv
      */
     public static function action(string $importerClass, ?string $label = null, ?Closure $visible = null): Action
     {
-        $importer = new $importerClass;
+        $importer = app($importerClass);
         $label ??= 'Import CSV';
 
         $permission = $importer->permission();
@@ -405,7 +405,7 @@ class ImportsCsv
         // tidy up the uploaded file
         try {
             Storage::disk('local')->delete($file);
-        } catch (\Throwable) {
+        } catch (\Throwable) { // nosemgrep: semgrep.rules.php-empty-catch -- upstream 1.3.0 debt, README-FORK
             // best-effort cleanup
         }
 

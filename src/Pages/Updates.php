@@ -442,7 +442,7 @@ class Updates extends Page
 
                 $checked = true;
             }
-        } catch (Throwable) {
+        } catch (Throwable) { // nosemgrep: semgrep.rules.php-empty-catch -- upstream 1.3.0 debt, README-FORK
             // A version check must never break the page it is rendered on.
         }
 

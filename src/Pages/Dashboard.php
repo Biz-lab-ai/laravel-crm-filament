@@ -124,7 +124,7 @@ class Dashboard extends BaseDashboard
                 if ($plugin instanceof LaravelCrmPlugin) {
                     return $plugin->isModuleEnabled($module);
                 }
-            } catch (\Throwable) {
+            } catch (\Throwable) { // nosemgrep: semgrep.rules.php-empty-catch -- upstream 1.3.0 debt, README-FORK
                 // Panel has no plugin under this id; fall through to config check.
             }
         }

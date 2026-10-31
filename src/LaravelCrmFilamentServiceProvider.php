@@ -7,6 +7,7 @@ use Filament\Facades\Filament;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Schema;
 use Livewire\Livewire;
+use RuntimeException;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Throwable;
@@ -37,8 +38,10 @@ use VentureDrake\LaravelCrm\Models\Team;
 use VentureDrake\LaravelCrmFilament\Console\InstallCommand;
 use VentureDrake\LaravelCrmFilament\Console\UpdateCommand;
 use VentureDrake\LaravelCrmFilament\Console\UpgradeCommand;
+use VentureDrake\LaravelCrmFilament\Contracts\RendersPdf;
 use VentureDrake\LaravelCrmFilament\Livewire\SystemCheckBanner;
 use VentureDrake\LaravelCrmFilament\Models\Audit;
+use VentureDrake\LaravelCrmFilament\Support\DompdfViewRenderer;
 use VentureDrake\LaravelCrmFilament\Support\PanelSystemCheck;
 use VentureDrake\LaravelCrmFilament\Support\TenancyGuard;
 
@@ -94,6 +97,19 @@ class LaravelCrmFilamentServiceProvider extends PackageServiceProvider
             __DIR__ . '/../config/package.php',
             'laravel-crm-filament',
         );
+
+        // Every document PDF goes through the configured renderer (plan CRM 2.1i): the host sets
+        // laravel-crm-filament.pdf_renderer before this provider registers; the default is the upstream path.
+        $this->app->bind(RendersPdf::class, function (): RendersPdf {
+            $class = config('laravel-crm-filament.pdf_renderer', DompdfViewRenderer::class);
+            $renderer = app(is_string($class) && $class !== '' ? $class : DompdfViewRenderer::class);
+
+            if (! $renderer instanceof RendersPdf) {
+                throw new RuntimeException('laravel-crm-filament.pdf_renderer must name a class implementing RendersPdf.');
+            }
+
+            return $renderer;
+        });
 
         // Named to match core's `laravel-crm.system-check` so the two read as a
         // pair. A singleton because both the banner (per request) and the
@@ -233,7 +249,7 @@ class LaravelCrmFilamentServiceProvider extends PackageServiceProvider
         // them (e.g. when the host uses HasCrmTeams trait).
         $userModelClass = config('auth.providers.users.model');
         if (is_string($userModelClass) && class_exists($userModelClass)) {
-            $userInstance = new $userModelClass;
+            $userInstance = app($userModelClass);
 
             if (! method_exists($userInstance, 'phones')) {
                 $userModelClass::resolveRelationUsing('phones', function ($model) {

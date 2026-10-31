@@ -24,4 +24,8 @@ return [
 
     'version' => '1.3.0',
 
+    // The class that renders every document PDF (RendersPdf); a host binds its own
+    // here. A class name, never a closure: config:cache.
+    'pdf_renderer' => \VentureDrake\LaravelCrmFilament\Support\DompdfViewRenderer::class,
+
 ];

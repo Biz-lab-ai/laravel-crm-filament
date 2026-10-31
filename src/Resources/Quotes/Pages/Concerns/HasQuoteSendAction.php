@@ -7,12 +7,10 @@ use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
-use Illuminate\Support\Facades\Mail;
-use VentureDrake\LaravelCrm\Mail\SendQuote;
 use VentureDrake\LaravelCrm\Models\Quote;
 use VentureDrake\LaravelCrmFilament\Concerns\DownloadsPdf;
+use VentureDrake\LaravelCrmFilament\Support\DocumentSending;
 use VentureDrake\LaravelCrmFilament\Support\PortalMessage;
-use VentureDrake\LaravelCrmFilament\Support\PortalUrl;
 
 trait HasQuoteSendAction
 {
@@ -60,24 +58,6 @@ trait HasQuoteSendAction
 
     protected function dispatchQuote(Quote $record, array $data): void
     {
-        $signedUrl = PortalUrl::signedFor('laravel-crm.portal.quotes.show', $record);
-
-        $pdfPath = $this->generateQuotePdf($record);
-
-        Mail::send(new SendQuote([
-            'to' => $data['to'],
-            'subject' => $data['subject'],
-            // Null link, no placeholder: base's mailable expands it either way,
-            // and an unexpanded null mails an empty anchor.
-            'message' => PortalMessage::resolve(PortalMessage::QUOTE, (string) $data['message'], $signedUrl),
-            'cc' => ! empty($data['cc']) ? 1 : 0,
-            'onlineQuoteLink' => $signedUrl ?? '',
-            'pdf' => $pdfPath,
-        ]));
-    }
-
-    protected function generateQuotePdf(Quote $record): string
-    {
-        return $this->renderPdfToDisk($record, 'quote');
+        DocumentSending::sender()->send($record, 'quote', $data);
     }
 }

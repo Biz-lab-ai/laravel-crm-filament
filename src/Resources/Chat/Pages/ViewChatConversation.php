@@ -41,7 +41,7 @@ class ViewChatConversation extends ViewRecord
         // opens. Mirrors how a chat client would auto-acknowledge.
         try {
             app(ChatService::class)->markRead($this->record, 'visitor');
-        } catch (\Throwable $e) {
+        } catch (\Throwable $e) { // nosemgrep: semgrep.rules.php-empty-catch -- upstream 1.3.0 debt, README-FORK
             // swallow — read receipts are best-effort
         }
     }

@@ -159,6 +159,6 @@ trait HasUserInviteAction
     {
         $model = static::inviteUserModel();
 
-        return (new $model)->getTable();
+        return app($model)->getTable();
     }
 }

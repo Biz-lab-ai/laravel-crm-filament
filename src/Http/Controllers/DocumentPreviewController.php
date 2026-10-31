@@ -40,16 +40,14 @@ class DocumentPreviewController
 
         abort_if(auth()->user()?->cannot('view', $document) ?? true, Response::HTTP_FORBIDDEN);
 
-        $path = storage_path(CrmPdf::renderToDisk($document, $type));
+        $bytes = CrmPdf::render($document, $type);
         $filename = CrmPdf::filename($document, $type);
 
-        // streamDownload() rather than Response::file(): the PDF is generated
-        // per request into testbench-and-host-writable storage, and streaming
-        // lets the response start without the framework stat-ing a path the
-        // caller never sees. The disposition is what the iframe needs.
+        // The bytes are rendered in memory (plan CRM 2.1h, crm-2-1h-2): no copy of the document is left in storage. The
+        // disposition is what the iframe needs.
         return response()->streamDownload(
-            function () use ($path): void {
-                echo (string) file_get_contents($path);
+            function () use ($bytes): void {
+                echo $bytes;
             },
             $filename,
             [

@@ -2,16 +2,15 @@
 
 namespace VentureDrake\LaravelCrmFilament\Support;
 
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Response;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use VentureDrake\LaravelCrm\Services\SettingService;
 use VentureDrake\LaravelCrm\Support\PdfContactDetails;
 use VentureDrake\LaravelCrm\Support\PdfLogo;
 use VentureDrake\LaravelCrm\Support\PdfTemplateRegistry;
 use VentureDrake\LaravelCrm\Support\PortalTeam;
+use VentureDrake\LaravelCrmFilament\Contracts\RendersPdf;
 
 /**
  * One place where a CRM document becomes a PDF.
@@ -38,6 +37,9 @@ use VentureDrake\LaravelCrm\Support\PortalTeam;
  *    chosen template for purchase orders.
  *  - The storage path and filename strings, which are byte-identical to what
  *    they replace. The mailers look for their attachment at exactly that path.
+ *
+ * Since plan CRM 2.1i (crm-2-1i-2) the bytes come from the configured RendersPdf (the host's renderer), never from the
+ * Pdf facade.
  */
 class CrmPdf
 {
@@ -256,6 +258,19 @@ class CrmPdf
     }
 
     /**
+     * The document's PDF as bytes, rendered in memory: the document is not written to storage (plan CRM 2.1h, crm-2-1h-2).
+     * Dompdf may still write its font-metrics cache to `dompdf.options.font_cache`; it holds no document content. The
+     * download and the preview stream these bytes; renderToDisk() stays for the senders that still attach a file.
+     */
+    public static function render(Model $record, string $type): string
+    {
+        return self::withDocumentSettings(
+            $record,
+            fn (): string => app(RendersPdf::class)->render(self::viewFor($type, $record), self::viewData($type, $record)),
+        );
+    }
+
+    /**
      * Render to `storage/app/laravel-crm/{type}/{id}/{prefix}-{number}.pdf` and
      * return the storage-relative path. The mailers attach exactly this path.
      *
@@ -275,22 +290,25 @@ class CrmPdf
 
         $pdfRelative = 'app/' . $relativeDir . '/' . self::filename($record, $type);
 
-        // Pinned across viewFor() as well as viewData(): the template choice
-        // falls back to the `pdf_template_{type}` setting, which is as
-        // team-scoped as the branding printed into it.
-        self::withDocumentSettings($record, function () use ($type, $record, $pdfRelative): void {
-            Pdf::setOption(['fontDir' => public_path('vendor/laravel-crm/fonts')])
-                ->loadView(self::viewFor($type, $record), self::viewData($type, $record))
-                ->save(storage_path($pdfRelative));
-        });
+        File::put(storage_path($pdfRelative), self::render($record, $type));
 
         return $pdfRelative;
     }
 
-    public static function download(Model $record, string $type): BinaryFileResponse
+    /**
+     * Stream the PDF as an attachment. The bytes are rendered before the response is built, so a rendering error is still
+     * an error of the request and not a broken body.
+     */
+    public static function download(Model $record, string $type): StreamedResponse
     {
-        $pdfRelative = self::renderToDisk($record, $type);
+        $bytes = self::render($record, $type);
 
-        return Response::download(storage_path($pdfRelative), self::filename($record, $type));
+        return response()->streamDownload(
+            function () use ($bytes): void {
+                echo $bytes;
+            },
+            self::filename($record, $type),
+            ['Content-Type' => 'application/pdf'],
+        );
     }
 }

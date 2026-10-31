@@ -236,7 +236,7 @@ class InstallCommand extends Command
             try {
                 $panel = $provider->panel(Panel::make());
                 $providerByPanelId[$panel->getId()] = get_class($provider);
-            } catch (Throwable) {
+            } catch (Throwable) { // nosemgrep: semgrep.rules.php-empty-catch -- upstream 1.3.0 debt, README-FORK
                 // Skip providers that can't be probed outside their normal registration path.
             }
         }

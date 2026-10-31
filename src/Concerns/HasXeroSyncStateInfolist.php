@@ -126,7 +126,7 @@ trait HasXeroSyncStateInfolist
             if ($plugin) {
                 return $plugin->isModuleEnabled('xero');
             }
-        } catch (\Throwable) {
+        } catch (\Throwable) { // nosemgrep: semgrep.rules.php-empty-catch -- upstream 1.3.0 debt, README-FORK
             // No plugin attached to the current panel — fall through.
         }
 
@@ -142,7 +142,7 @@ trait HasXeroSyncStateInfolist
 
                 return false;
             }
-        } catch (\Throwable) {
+        } catch (\Throwable) { // nosemgrep: semgrep.rules.php-empty-catch -- upstream 1.3.0 debt, README-FORK
             // No panel at all — final fall through.
         }
 

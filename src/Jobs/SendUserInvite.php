@@ -141,7 +141,7 @@ class SendUserInvite implements ShouldQueue
                     return $panel;
                 }
             }
-        } catch (Throwable) {
+        } catch (Throwable) { // nosemgrep: semgrep.rules.php-empty-catch -- upstream 1.3.0 debt, README-FORK
             // Filament is not booted (queue worker without a panel context).
         }
 

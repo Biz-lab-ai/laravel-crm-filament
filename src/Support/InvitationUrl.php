@@ -90,7 +90,7 @@ class InvitationUrl
 
         try {
             $current = Filament::getCurrentOrDefaultPanel();
-        } catch (Throwable) {
+        } catch (Throwable) { // nosemgrep: semgrep.rules.php-empty-catch -- upstream 1.3.0 debt, README-FORK
             // No default panel; fall through to the full sweep.
         }
 

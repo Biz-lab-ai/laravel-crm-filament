@@ -18,9 +18,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Response;
-use VentureDrake\LaravelCrm\Mail\SendQuote;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use VentureDrake\LaravelCrm\Models\PipelineStage;
 use VentureDrake\LaravelCrm\Models\Quote;
 use VentureDrake\LaravelCrmFilament\Concerns\ExportsCsv;
@@ -53,6 +51,7 @@ use VentureDrake\LaravelCrmFilament\Resources\Quotes\Pages\QuoteKanban;
 use VentureDrake\LaravelCrmFilament\Resources\Quotes\Pages\ViewQuote;
 use VentureDrake\LaravelCrmFilament\Support\CrmMoney;
 use VentureDrake\LaravelCrmFilament\Support\CrmPdf;
+use VentureDrake\LaravelCrmFilament\Support\DocumentSending;
 use VentureDrake\LaravelCrmFilament\Support\EncryptedContactSearch;
 use VentureDrake\LaravelCrmFilament\Support\PortalMessage;
 use VentureDrake\LaravelCrmFilament\Support\PortalUrl;
@@ -383,37 +382,12 @@ class QuoteResource extends Resource
             ->label(__('laravel-crm-filament::labels.actions.download_pdf'))
             ->icon('heroicon-o-arrow-down-tray')
             ->color('gray')
-            ->action(function (Quote $record) {
-                $relative = static::renderQuotePdfToDisk($record);
-
-                return Response::download(
-                    storage_path($relative),
-                    'quote-' . strtolower((string) ($record->quote_id ?? $record->external_id)) . '.pdf',
-                );
-            });
+            ->action(fn (Quote $record): StreamedResponse => CrmPdf::download($record, 'quote'));
     }
 
     protected static function dispatchQuoteSend(Quote $record, array $data): void
     {
-        $signedUrl = PortalUrl::signedFor('laravel-crm.portal.quotes.show', $record);
-
-        $pdfPath = static::renderQuotePdfToDisk($record);
-
-        Mail::send(new SendQuote([
-            'to' => $data['to'],
-            'subject' => $data['subject'],
-            // Null link, no placeholder: base's mailable expands it either way,
-            // and an unexpanded null mails an empty anchor.
-            'message' => PortalMessage::resolve(PortalMessage::QUOTE, (string) $data['message'], $signedUrl),
-            'cc' => ! empty($data['cc']) ? 1 : 0,
-            'onlineQuoteLink' => $signedUrl ?? '',
-            'pdf' => $pdfPath,
-        ]));
-    }
-
-    protected static function renderQuotePdfToDisk(Quote $record): string
-    {
-        return CrmPdf::renderToDisk($record, 'quote');
+        DocumentSending::sender()->send($record, 'quote', $data);
     }
 
     public static function acceptAction(): Action
