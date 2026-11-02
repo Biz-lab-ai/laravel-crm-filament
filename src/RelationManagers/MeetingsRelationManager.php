@@ -18,7 +18,10 @@ class MeetingsRelationManager extends RelationManager
 
     protected static string $relationship = 'meetings';
 
-    protected static ?string $title = 'Meetings';
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return __('laravel-crm-filament::labels.entities.meetings');
+    }
 
     public function form(Schema $schema): Schema
     {

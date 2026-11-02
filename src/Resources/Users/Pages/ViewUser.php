@@ -31,11 +31,11 @@ class ViewUser extends ViewRecord
             Actions\EditAction::make()
                 ->icon('heroicon-m-pencil-square')
                 ->hiddenLabel()
-                ->tooltip('Edit'),
+                ->tooltip(__('laravel-crm-filament::labels.actions.edit')),
             Actions\DeleteAction::make()
                 ->icon('heroicon-m-trash')
                 ->hiddenLabel()
-                ->tooltip('Delete'),
+                ->tooltip(__('laravel-crm-filament::labels.actions.delete')),
         ];
     }
 

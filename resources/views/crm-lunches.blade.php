@@ -80,7 +80,7 @@
                                 <button
                                     type="button"
                                     wire:click="deleteLunch({{ $lunch->id }})"
-                                    wire:confirm="Delete this lunch?"
+                                    wire:confirm="{{ __('laravel-crm-filament::labels.actions.delete_this', ['entity' => __('laravel-crm-filament::labels.entities.lunch')]) }}"
                                     @click="open = false"
                                     class="crm-card-dropdown-item crm-card-dropdown-item--danger"
                                     role="menuitem"
@@ -92,10 +92,10 @@
                 <div class="crm-card-badges">
                     @include('laravel-crm-filament::partials.crm-related-badge', ['related' => $isRelated])
                     @if ($lunch->start_at)
-                        <span class="crm-card-pill">{{ __('laravel-crm-filament::labels.money.start_at') }} {{ $lunch->start_at->format('h:i A') }} on {{ $lunch->start_at->format('M d, Y') }}</span>
+                        <span class="crm-card-pill">{{ __('laravel-crm-filament::labels.money.start_at') }} {{ $lunch->start_at->format('H:i') }} · {{ $lunch->start_at->format('d.m.Y') }}</span>
                     @endif
                     @if ($lunch->finish_at)
-                        <span class="crm-card-pill">{{ __('laravel-crm-filament::labels.money.finish_at') }} {{ $lunch->finish_at->format('h:i A') }} on {{ $lunch->finish_at->format('M d, Y') }}</span>
+                        <span class="crm-card-pill">{{ __('laravel-crm-filament::labels.money.finish_at') }} {{ $lunch->finish_at->format('H:i') }} · {{ $lunch->finish_at->format('d.m.Y') }}</span>
                     @endif
                 </div>
 
@@ -131,6 +131,6 @@
             @endif
         </div>
     @empty
-        <div class="crm-card-empty">No lunches yet.</div>
+        <div class="crm-card-empty">{{ __('laravel-crm-filament::labels.sections.no_lunches_yet') }}</div>
     @endforelse
 </div>

@@ -54,14 +54,14 @@
     </style>
 
     <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
-        <label style="font-size:0.75rem; color:#6b7280;">Owner</label>
+        <label style="font-size:0.75rem; color:#6b7280;">{{ __('laravel-crm-filament::labels.fields.owner') }}</label>
         @if ($this->ownerSearchEnabled())
-            <input type="search" wire:model.live.debounce.300ms="ownerSearch" placeholder="Search owners…" autocomplete="off"
+            <input type="search" wire:model.live.debounce.300ms="ownerSearch" placeholder="{{ __('laravel-crm-filament::labels.misc.search_owners') }}" autocomplete="off"
                    style="font-size:0.875rem; padding:0.375rem 0.5rem; border-radius:0.375rem; border:1px solid #d1d5db; background:#fff;">
         @endif
         <select wire:model.live="ownerFilter"
                 style="font-size:0.875rem; padding:0.375rem 0.5rem; border-radius:0.375rem; border:1px solid #d1d5db; background:#fff;">
-            <option value="">Everyone</option>
+            <option value="">{{ __('laravel-crm-filament::labels.misc.everyone') }}</option>
             @foreach ($this->getOwners() as $id => $name)
                 <option value="{{ $id }}">{{ $name }}</option>
             @endforeach
@@ -119,9 +119,9 @@
                                 <div class="crm-kanban-actions">
                                     <button type="button"
                                             wire:click.stop="convertToDeal('{{ $lead->external_id }}')"
-                                            wire:confirm="Convert this lead into a deal?"
+                                            wire:confirm="{{ __('laravel-crm-filament::labels.actions.convert_confirm') }}"
                                             class="crm-kanban-btn crm-kanban-btn-primary"
-                                            title="Convert to deal">Convert</button>
+                                            title="{{ __('laravel-crm-filament::labels.actions.convert_to_deal') }}">{{ __('laravel-crm-filament::labels.actions.convert') }}</button>
                                 </div>
                                 <a href="{{ route('filament.crm.resources.leads.edit', ['record' => $lead->external_id]) }}"
                                    class="crm-kanban-card-link">
@@ -139,10 +139,12 @@
                 </div>
             @empty
                 <div class="crm-kanban-empty">
-                    No pipeline stages configured for Leads.
-                    <a style="color:#05b3a9;" href="{{ route('filament.crm.settings.resources.pipelines.index') }}">
-                        Configure pipelines
-                    </a>.
+                    {{ __('laravel-crm-filament::labels.sections.no_stages_for', ['entity' => __('laravel-crm-filament::labels.entities.leads')]) }}
+                    @if (Route::has('filament.crm.settings.resources.pipelines.index'))
+                        <a style="color:#05b3a9;" href="{{ route('filament.crm.settings.resources.pipelines.index') }}">
+                            {{ __('laravel-crm-filament::labels.sections.configure_pipelines') }}
+                        </a>.
+                    @endif
                 </div>
             @endforelse
         </div>

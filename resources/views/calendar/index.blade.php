@@ -38,12 +38,12 @@
 
     <div class="crm-calendar-toolbar">
         <div style="display:flex; align-items:center; gap:0.5rem;">
-            <label>Owner</label>
+            <label>{{ __('laravel-crm-filament::labels.fields.owner') }}</label>
             @if ($this->ownerSearchEnabled())
-                <input type="search" wire:model.live.debounce.300ms="ownerSearch" placeholder="Search owners…" autocomplete="off">
+                <input type="search" wire:model.live.debounce.300ms="ownerSearch" placeholder="{{ __('laravel-crm-filament::labels.misc.search_owners') }}" autocomplete="off">
             @endif
             <select wire:model.live="ownerFilter">
-                <option value="">Everyone</option>
+                <option value="">{{ __('laravel-crm-filament::labels.misc.everyone') }}</option>
                 @foreach ($this->getOwners() as $id => $name)
                     <option value="{{ $id }}">{{ $name }}</option>
                 @endforeach
@@ -51,11 +51,11 @@
         </div>
 
         <div class="crm-calendar-types">
-            <span style="color:#6b7280;">Show</span>
-            <label><input type="checkbox" wire:model.live="typeFilters.task"> Tasks</label>
-            <label><input type="checkbox" wire:model.live="typeFilters.call"> Calls</label>
-            <label><input type="checkbox" wire:model.live="typeFilters.meeting"> Meetings</label>
-            <label><input type="checkbox" wire:model.live="typeFilters.lunch"> Lunches</label>
+            <span style="color:#6b7280;">{{ __('laravel-crm-filament::labels.misc.show') }}</span>
+            <label><input type="checkbox" wire:model.live="typeFilters.task"> {{ __('laravel-crm-filament::labels.entities.tasks') }}</label>
+            <label><input type="checkbox" wire:model.live="typeFilters.call"> {{ __('laravel-crm-filament::labels.entities.calls') }}</label>
+            <label><input type="checkbox" wire:model.live="typeFilters.meeting"> {{ __('laravel-crm-filament::labels.entities.meetings') }}</label>
+            <label><input type="checkbox" wire:model.live="typeFilters.lunch"> {{ __('laravel-crm-filament::labels.entities.lunches') }}</label>
         </div>
     </div>
 
@@ -67,6 +67,7 @@
                 const host = this.$refs.host;
                 if (!host) return;
                 this.calendar = new window.FullCalendar.Calendar(host, {
+                    locale: '{{ app()->getLocale() }}',
                     initialView: 'dayGridMonth',
                     headerToolbar: {
                         left: 'prev,next today',
@@ -93,13 +94,27 @@
                     this.mountFullCalendar();
                     return;
                 }
+                const locale = '{{ app()->getLocale() }}';
                 const link = document.createElement('link');
                 link.rel = 'stylesheet';
                 link.href = 'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css';
                 document.head.appendChild(link);
                 const script = document.createElement('script');
                 script.src = 'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js';
-                script.onload = () => this.mountFullCalendar();
+                // The global bundle ships no locale packs, and Intl only covers
+                // the month and weekday names - the toolbar buttons and the
+                // hebrew direction live in the locale's own pack.
+                script.onload = () => {
+                    if (locale === 'en') {
+                        this.mountFullCalendar();
+                        return;
+                    }
+                    const pack = document.createElement('script');
+                    pack.src = `https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.15/locales/${locale}.global.min.js`;
+                    pack.onload = () => this.mountFullCalendar();
+                    pack.onerror = () => this.mountFullCalendar();
+                    document.head.appendChild(pack);
+                };
                 document.head.appendChild(script);
             },
         }"

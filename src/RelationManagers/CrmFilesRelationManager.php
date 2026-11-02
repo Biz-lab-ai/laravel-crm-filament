@@ -86,7 +86,7 @@ class CrmFilesRelationManager extends FilesRelationManager
         ]);
 
         Notification::make()
-            ->title('File added')
+            ->title(__('laravel-crm-filament::labels.notifications.file_added'))
             ->success()
             ->send();
     }
@@ -117,7 +117,7 @@ class CrmFilesRelationManager extends FilesRelationManager
         $file->delete();
 
         Notification::make()
-            ->title('File deleted')
+            ->title(__('laravel-crm-filament::labels.notifications.file_deleted'))
             ->success()
             ->send();
     }

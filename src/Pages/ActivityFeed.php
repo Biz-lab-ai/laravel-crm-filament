@@ -5,6 +5,7 @@ namespace VentureDrake\LaravelCrmFilament\Pages;
 use BackedEnum;
 use Filament\Pages\Page;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\Support\Htmlable;
 use Livewire\Attributes\Url;
 use VentureDrake\LaravelCrm\Models\Activity;
 use VentureDrake\LaravelCrm\Models\Call;
@@ -38,6 +39,16 @@ class ActivityFeed extends Page
     protected static ?string $slug = 'activities';
 
     protected static ?int $navigationSort = 40;
+
+    public function getTitle(): string | Htmlable
+    {
+        return __('laravel-crm-filament::labels.entities.activity');
+    }
+
+    public static function getNavigationLabel(): string | Htmlable
+    {
+        return __('laravel-crm-filament::labels.entities.activity');
+    }
 
     protected string $view = 'laravel-crm-filament::activity-feed';
 

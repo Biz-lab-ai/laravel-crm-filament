@@ -63,10 +63,12 @@ class TaskResource extends Resource
     {
         $components = [
             Forms\Components\TextInput::make('name')
+                ->label(__('laravel-crm-filament::labels.fields.name'))
                 ->required()
                 ->maxLength(255),
 
             Forms\Components\Textarea::make('description')
+                ->label(__('laravel-crm-filament::labels.fields.description'))
                 ->rows(3)
                 ->columnSpanFull(),
 
@@ -121,6 +123,7 @@ class TaskResource extends Resource
                     TextEntry::make('status')
                         ->label(__('laravel-crm-filament::labels.fields.status'))
                         ->state(fn (?Task $r) => $r?->completed_at ? 'Completed' : 'Pending')
+                        ->formatStateUsing(fn (string $state): string => __('laravel-crm-filament::labels.status.' . strtolower($state)))
                         ->badge()
                         ->color(fn (string $state): string => match ($state) {
                             'Completed' => 'success',
@@ -131,19 +134,19 @@ class TaskResource extends Resource
                     TextEntry::make('start_at')
                         ->label(__('laravel-crm-filament::labels.money.start_at'))
                         ->since()
-                        ->tooltip(fn (?Task $r): ?string => optional($r?->start_at)->format('M d, Y H:i'))
+                        ->tooltip(fn (?Task $r): ?string => $r?->start_at?->locale(app()->getLocale())->translatedFormat('M d, Y H:i'))
                         ->placeholder('—'),
 
                     TextEntry::make('due_at')
                         ->label(__('laravel-crm-filament::labels.money.due_at'))
                         ->since()
-                        ->tooltip(fn (?Task $r): ?string => optional($r?->due_at)->format('M d, Y H:i'))
+                        ->tooltip(fn (?Task $r): ?string => $r?->due_at?->locale(app()->getLocale())->translatedFormat('M d, Y H:i'))
                         ->placeholder('—'),
 
                     TextEntry::make('completed_at')
                         ->label(__('laravel-crm-filament::labels.fields.completed'))
                         ->since()
-                        ->tooltip(fn (?Task $r): ?string => optional($r?->completed_at)->format('M d, Y H:i'))
+                        ->tooltip(fn (?Task $r): ?string => $r?->completed_at?->locale(app()->getLocale())->translatedFormat('M d, Y H:i'))
                         ->placeholder('—')
                         ->visible(fn (?Task $r): bool => $r?->completed_at !== null),
 
@@ -183,6 +186,7 @@ class TaskResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->label(__('laravel-crm-filament::labels.fields.status'))
                     ->state(fn (Task $record): string => $record->completed_at ? 'Completed' : 'Pending')
+                    ->formatStateUsing(fn (string $state): string => __('laravel-crm-filament::labels.status.' . strtolower($state)))
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'Completed' => 'success',
@@ -192,6 +196,7 @@ class TaskResource extends Resource
                     ->sortable(query: fn (Builder $query, string $direction): Builder => $query->orderBy('completed_at', $direction)),
 
                 Tables\Columns\TextColumn::make('name')
+                    ->label(__('laravel-crm-filament::labels.fields.name'))
                     ->searchable()
                     ->sortable()
                     ->limit(60),
@@ -205,14 +210,15 @@ class TaskResource extends Resource
                 Tables\Columns\TextColumn::make('start_at')
                     ->label(__('laravel-crm-filament::labels.money.start_at'))
                     ->since()
-                    ->tooltip(fn (Task $record): ?string => optional($record->start_at)->format('M d, Y H:i'))
+                    ->tooltip(fn (Task $record): ?string => $record->start_at?->locale(app()->getLocale())->translatedFormat('M d, Y H:i'))
                     ->sortable()
                     ->placeholder('—')
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('due_at')
+                    ->label(__('laravel-crm-filament::labels.money.due_at'))
                     ->since()
-                    ->tooltip(fn (Task $record): ?string => optional($record->due_at)->format('M d, Y H:i'))
+                    ->tooltip(fn (Task $record): ?string => $record->due_at?->locale(app()->getLocale())->translatedFormat('M d, Y H:i'))
                     ->sortable()
                     ->placeholder('—'),
 
@@ -245,8 +251,8 @@ class TaskResource extends Resource
                 Tables\Filters\SelectFilter::make('status')
                     ->label(__('laravel-crm-filament::labels.fields.status'))
                     ->options([
-                        'pending' => 'Pending',
-                        'completed' => 'Completed',
+                        'pending' => __('laravel-crm-filament::labels.status.pending'),
+                        'completed' => __('laravel-crm-filament::labels.status.completed'),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return match ($data['value'] ?? null) {
@@ -285,7 +291,7 @@ class TaskResource extends Resource
                                     $updated++;
                                 }
                             }
-                            Notification::make()->title($updated . ' task(s) marked complete')->success()->send();
+                            Notification::make()->title(__('laravel-crm-filament::labels.notifications.tasks_marked_complete', ['count' => $updated]))->success()->send();
                         }),
                     ExportsCsv::action(
                         columns: [

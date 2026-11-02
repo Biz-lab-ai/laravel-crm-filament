@@ -18,7 +18,10 @@ class TasksRelationManager extends RelationManager
 
     protected static string $relationship = 'tasks';
 
-    protected static ?string $title = 'Tasks';
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return __('laravel-crm-filament::labels.entities.tasks');
+    }
 
     public function form(Schema $schema): Schema
     {

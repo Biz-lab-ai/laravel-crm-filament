@@ -9,6 +9,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use VentureDrake\LaravelCrm\Models\Contact;
 use VentureDrake\LaravelCrm\Models\Person;
 use VentureDrake\LaravelCrmFilament\Concerns\AuthorizesRelatedContacts;
@@ -20,7 +21,10 @@ class RelatedPeopleRelationManager extends RelationManager
 
     protected static string $relationship = 'relatedPeopleContacts';
 
-    protected static ?string $title = 'Related people';
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return __('laravel-crm-filament::labels.sections.related_people');
+    }
 
     public function form(Schema $schema): Schema
     {
@@ -52,6 +56,8 @@ class RelatedPeopleRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('id')
+            ->pluralModelLabel(__('laravel-crm-filament::labels.entities.people'))
+            ->modelLabel(__('laravel-crm-filament::labels.entities.person'))
             ->columns([
                 Tables\Columns\TextColumn::make('related_name')
                     ->label(__('laravel-crm-filament::labels.fields.name'))
@@ -83,7 +89,7 @@ class RelatedPeopleRelationManager extends RelationManager
                     ->hiddenLabel()
                     ->tooltip(__('laravel-crm-filament::labels.actions.add_person'))
                     ->modalHeading(__('laravel-crm-filament::labels.actions.add_person'))
-                    ->modalSubmitActionLabel('Link')
+                    ->modalSubmitActionLabel(__('laravel-crm-filament::labels.actions.link'))
                     ->createAnother(false)
                     ->using(function (array $data): Contact {
                         /** @var Person $owner */
@@ -116,7 +122,7 @@ class RelatedPeopleRelationManager extends RelationManager
                     ->authorize(fn (?Contact $record): bool => $this->authorizeRelatedContact('delete', $record))
                     ->icon('heroicon-m-x-mark')
                     ->hiddenLabel()
-                    ->tooltip('Remove')
+                    ->tooltip(__('laravel-crm-filament::labels.actions.remove'))
                     ->color('danger')
                     ->using(function (Contact $record): void {
                         /** @var Person $owner */

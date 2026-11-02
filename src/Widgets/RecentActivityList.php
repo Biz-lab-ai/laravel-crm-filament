@@ -10,13 +10,14 @@ use VentureDrake\LaravelCrm\Models\Activity;
 
 class RecentActivityList extends TableWidget
 {
-    protected static ?string $heading = 'Recent activity';
+    protected static ?string $heading = null;
 
     protected int | string | array $columnSpan = 'full';
 
     public function table(Table $table): Table
     {
         return $table
+            ->heading(__('laravel-crm-filament::labels.dashboard.recent_activity'))
             ->query(fn (): Builder => Activity::query()
                 ->with(['causeable', 'timelineable', 'recordable'])
                 ->orderByDesc('created_at'))
@@ -26,7 +27,7 @@ class RecentActivityList extends TableWidget
                     ->since(),
                 Tables\Columns\TextColumn::make('causeable.name')
                     ->label(__('laravel-crm-filament::labels.fields.user'))
-                    ->placeholder('System'),
+                    ->placeholder(__('laravel-crm-filament::labels.fields.system')),
                 Tables\Columns\TextColumn::make('recordable_type')
                     ->label(__('laravel-crm-filament::labels.fields.action'))
                     ->formatStateUsing(fn (?string $state, $record) => static::describeAction($state, $record)),
@@ -36,18 +37,18 @@ class RecentActivityList extends TableWidget
             ])
             ->paginated([10, 25])
             ->defaultPaginationPageOption(10)
-            ->emptyStateHeading('No activity yet');
+            ->emptyStateHeading(__('laravel-crm-filament::labels.dashboard.no_activity_yet'));
     }
 
     protected static function describeAction(?string $recordableType, $row): string
     {
         $verb = match (class_basename($recordableType ?? '')) {
-            'Note' => 'logged a note',
-            'Task' => 'created a task',
-            'Call' => 'logged a call',
-            'Meeting' => 'scheduled a meeting',
-            'Lunch' => 'scheduled lunch',
-            default => 'logged activity',
+            'Note' => __('laravel-crm-filament::labels.timeline.logged_note'),
+            'Task' => __('laravel-crm-filament::labels.timeline.created_task'),
+            'Call' => __('laravel-crm-filament::labels.timeline.logged_call'),
+            'Meeting' => __('laravel-crm-filament::labels.timeline.scheduled_meeting'),
+            'Lunch' => __('laravel-crm-filament::labels.timeline.scheduled_lunch'),
+            default => __('laravel-crm-filament::labels.timeline.logged_activity'),
         };
 
         return $verb;
@@ -59,7 +60,10 @@ class RecentActivityList extends TableWidget
             return '—';
         }
         $parent = $row->timelineable;
-        $label = class_basename($type);
+        $entity = class_basename($type);
+        $label = in_array($entity, ['Person', 'Organization', 'Lead', 'Deal', 'Quote'])
+            ? __('laravel-crm-filament::labels.entities.'.strtolower($entity))
+            : $entity;
         $title = $parent->title
             ?? $parent->name
             ?? trim(($parent->first_name ?? '') . ' ' . ($parent->last_name ?? ''))

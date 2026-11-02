@@ -8,9 +8,12 @@ use VentureDrake\LaravelCrm\Models\PipelineStage;
 
 class LeadsByStageChart extends ChartWidget
 {
-    protected ?string $heading = 'Leads by pipeline stage';
-
     protected int | string | array $columnSpan = 1;
+
+    public function getHeading(): ?string
+    {
+        return __('laravel-crm-filament::labels.dashboard.leads_by_stage');
+    }
 
     protected function getData(): array
     {
@@ -26,7 +29,7 @@ class LeadsByStageChart extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Open leads',
+                    'label' => __('laravel-crm-filament::labels.dashboard.open_leads'),
                     'data' => $stages->map(fn ($s) => (int) ($counts[$s->id] ?? 0))->all(),
                     'backgroundColor' => '#05b3a9',
                 ],

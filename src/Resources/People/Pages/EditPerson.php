@@ -19,7 +19,9 @@ class EditPerson extends EditRecord
         return [Actions\ViewAction::make()
             ->button()
             ->hiddenLabel()
-            ->icon('heroicon-m-eye'), Actions\DeleteAction::make()];
+            ->icon('heroicon-m-eye')
+            ->modalHeading(__('laravel-crm-filament::labels.actions.view')), Actions\DeleteAction::make()
+            ->modalHeading(__('laravel-crm-filament::labels.actions.delete'))];
     }
 
     protected function mutateFormDataBeforeFill(array $data): array

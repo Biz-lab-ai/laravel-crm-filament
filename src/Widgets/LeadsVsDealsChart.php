@@ -36,7 +36,7 @@ class LeadsVsDealsChart extends ChartWidget
 
         while ($cursor->lte($end)) {
             $buckets[$cursor->copy()->getTimestamp()] = [
-                'label' => $cursor->format($format),
+                'label' => $cursor->locale(app()->getLocale())->translatedFormat($format),
                 'leads' => 0,
                 'deals' => 0,
             ];

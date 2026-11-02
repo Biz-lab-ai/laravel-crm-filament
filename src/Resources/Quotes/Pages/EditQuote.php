@@ -32,13 +32,15 @@ class EditQuote extends EditRecord
             Actions\ViewAction::make()
                 ->button()
                 ->hiddenLabel()
-                ->icon('heroicon-m-eye'),
+                ->icon('heroicon-m-eye')
+                ->modalHeading(__('laravel-crm-filament::labels.actions.view')),
             $this->quoteSendAction(),
             $this->quotePortalAction(),
             Actions\DeleteAction::make()
                 ->button()
                 ->hiddenLabel()
-                ->icon('heroicon-m-trash'),
+                ->icon('heroicon-m-trash')
+                ->modalHeading(__('laravel-crm-filament::labels.actions.delete')),
         ];
     }
 

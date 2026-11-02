@@ -51,11 +51,13 @@ class ViewQuote extends ViewRecord
             Actions\EditAction::make()
                 ->button()
                 ->hiddenLabel()
-                ->icon('heroicon-m-pencil-square'),
+                ->icon('heroicon-m-pencil-square')
+                ->modalHeading(__('laravel-crm-filament::labels.actions.edit')),
             Actions\DeleteAction::make()
                 ->button()
                 ->hiddenLabel()
-                ->icon('heroicon-m-trash'),
+                ->icon('heroicon-m-trash')
+                ->modalHeading(__('laravel-crm-filament::labels.actions.delete')),
         ];
     }
 

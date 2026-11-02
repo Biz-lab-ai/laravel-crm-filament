@@ -17,6 +17,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Fluent;
+use Symfony\Component\Intl\Currencies;
 use VentureDrake\LaravelCrm\Models\Lead;
 use VentureDrake\LaravelCrm\Models\LeadSource;
 use VentureDrake\LaravelCrm\Models\LeadStatus;
@@ -88,10 +89,12 @@ class LeadResource extends Resource
     {
         $details = [
             Forms\Components\TextInput::make('title')
+                ->label(__('laravel-crm-filament::labels.fields.title'))
                 ->required()
                 ->maxLength(255),
 
             Forms\Components\Textarea::make('description')
+                ->label(__('laravel-crm-filament::labels.fields.description'))
                 ->rows(5)
                 ->columnSpanFull(),
 
@@ -99,7 +102,7 @@ class LeadResource extends Resource
                 Forms\Components\TextInput::make('amount')
                     ->label(__('laravel-crm-filament::labels.money.value'))
                     ->numeric()
-                    ->prefix(fn ($get) => $get('currency') ?: config('laravel-crm.default_currency', 'USD')),
+                    ->prefix(fn ($get) => Currencies::getSymbol($get('currency') ?: config('laravel-crm.default_currency', 'USD'), app()->getLocale())),
 
                 Forms\Components\Select::make('currency')
                     ->label(__('laravel-crm-filament::labels.fields.currency'))
@@ -110,7 +113,7 @@ class LeadResource extends Resource
 
             Forms\Components\Select::make('pipeline_stage_id')
                 ->label(__('laravel-crm-filament::labels.sales.pipeline_stage'))
-                ->options(fn () => PipelineStage::query()->orderBy('order')->pluck('name', 'id'))
+                ->options(fn () => PipelineStage::query()->orderBy('order')->get()->mapWithKeys(fn (PipelineStage $stage) => [$stage->id => $stage->name]))
                 ->searchable()
                 ->preload(),
 
@@ -171,6 +174,7 @@ class LeadResource extends Resource
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('title')
+                    ->label(__('laravel-crm-filament::labels.fields.title'))
                     ->sortable()
                     ->limit(50)
                     ->searchable(query: fn (Builder $query, string $search): Builder => EncryptedContactSearch::titleOrContact($query, $search)),
@@ -219,6 +223,7 @@ class LeadResource extends Resource
                     ->label(__('laravel-crm-filament::labels.fields.labels'))
                     ->multiple()
                     ->relationship('labels', 'name')
+                    ->getOptionLabelFromRecordUsing(fn (Model $record): string => (string) $record->name)
                     ->preload(),
 
                 Tables\Filters\SelectFilter::make('lead_source_id')
@@ -228,19 +233,23 @@ class LeadResource extends Resource
 
                 Tables\Filters\SelectFilter::make('pipeline_stage_id')
                     ->label(__('laravel-crm-filament::labels.sales.stage'))
-                    ->options(fn () => PipelineStage::query()->orderBy('order')->pluck('name', 'id')),
+                    ->options(fn () => PipelineStage::query()->orderBy('order')->get()->mapWithKeys(fn (PipelineStage $stage) => [$stage->id => $stage->name])),
             ])
             ->recordActions([
                 static::convertAction()
                     ->button()
                     ->label(__('laravel-crm-filament::labels.actions.convert')),
+                // The default modal heading names the row: a record's own name is tenant data, not a caption.
                 Actions\ViewAction::make()
+                    ->modalHeading(__('laravel-crm-filament::labels.actions.view'))
                     ->button()
                     ->hiddenLabel(),
                 Actions\EditAction::make()
+                    ->modalHeading(__('laravel-crm-filament::labels.actions.edit'))
                     ->button()
                     ->hiddenLabel(),
                 Actions\DeleteAction::make()
+                    ->modalHeading(__('laravel-crm-filament::labels.actions.delete'))
                     ->button()
                     ->hiddenLabel()
                     ->requiresConfirmation(),
@@ -385,7 +394,7 @@ class LeadResource extends Resource
                                 return null;
                             }
 
-                            return trim(($email->address ?? '') . ($email->type ? ' (' . $email->type . ')' : ''));
+                            return trim(($email->address ?? '') . ($email->type ? ' (' . __('laravel-crm-filament::labels.misc.' . $email->type) . ')' : ''));
                         }),
 
                     TextEntry::make('person_phone')
@@ -397,7 +406,7 @@ class LeadResource extends Resource
                                 return null;
                             }
 
-                            return trim(($phone->number ?? '') . ($phone->type ? ' (' . $phone->type . ')' : ''));
+                            return trim(($phone->number ?? '') . ($phone->type ? ' (' . __('laravel-crm-filament::labels.misc.' . $phone->type) . ')' : ''));
                         }),
                 ]),
         ])->columns(1);

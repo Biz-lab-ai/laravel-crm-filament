@@ -98,7 +98,7 @@
                                    class="crm-task-card-link">
                                     <div class="crm-task-card-title">{{ $task->name }}</div>
                                     @if ($task->due_at)
-                                        <div class="crm-task-card-meta">Due {{ $task->due_at->format('M j, Y') }}</div>
+                                        <div class="crm-task-card-meta">{{ __('laravel-crm-filament::labels.money.due') }} {{ $task->due_at->format('d.m.Y') }}</div>
                                     @endif
                                 </a>
                             </div>

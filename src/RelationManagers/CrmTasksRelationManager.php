@@ -98,7 +98,7 @@ class CrmTasksRelationManager extends TasksRelationManager
         ]);
 
         Notification::make()
-            ->title('Task added')
+            ->title(__('laravel-crm-filament::labels.notifications.task_added'))
             ->success()
             ->send();
     }
@@ -177,7 +177,7 @@ class CrmTasksRelationManager extends TasksRelationManager
         ]);
 
         Notification::make()
-            ->title('Task updated')
+            ->title(__('laravel-crm-filament::labels.notifications.task_updated'))
             ->success()
             ->send();
     }
@@ -198,7 +198,7 @@ class CrmTasksRelationManager extends TasksRelationManager
         static::logCrmActivity($this->getOwnerRecord(), $task);
 
         Notification::make()
-            ->title('Task completed')
+            ->title(__('laravel-crm-filament::labels.notifications.task_completed'))
             ->success()
             ->send();
     }
@@ -225,7 +225,7 @@ class CrmTasksRelationManager extends TasksRelationManager
         }
 
         Notification::make()
-            ->title('Task deleted')
+            ->title(__('laravel-crm-filament::labels.notifications.task_deleted'))
             ->success()
             ->send();
     }

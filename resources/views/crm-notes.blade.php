@@ -113,15 +113,15 @@
                                     @click="open = false"
                                     class="crm-card-dropdown-item"
                                     role="menuitem"
-                                >Edit</button>
+                                >{{ __('laravel-crm-filament::labels.actions.edit') }}</button>
                                 <button
                                     type="button"
                                     wire:click="deleteNote({{ $note->id }})"
-                                    wire:confirm="Delete this note?"
+                                    wire:confirm="{{ __('laravel-crm-filament::labels.actions.delete_this', ['entity' => __('laravel-crm-filament::labels.entities.note')]) }}"
                                     @click="open = false"
                                     class="crm-card-dropdown-item crm-card-dropdown-item--danger"
                                     role="menuitem"
-                                >Delete</button>
+                                >{{ __('laravel-crm-filament::labels.actions.delete') }}</button>
                             </div>
                         </div>
                     @endunless
@@ -129,12 +129,12 @@
                 <div class="crm-card-card-body">{{ $note->content }}</div>
                 @if ($note->noted_at)
                     <div class="crm-card-card-footer">
-                        <span class="crm-card-pill">Noted at {{ $note->noted_at->format('h:i A') }} on {{ $note->noted_at->format('M d, Y') }}</span>
+                        <span class="crm-card-pill">{{ __('laravel-crm-filament::labels.fields.noted_at_on', ['time' => $note->noted_at->format('H:i'), 'date' => $note->noted_at->format('d.m.Y')]) }}</span>
                     </div>
                 @endif
             @endif
         </div>
     @empty
-        <div class="crm-card-empty">No notes yet.</div>
+        <div class="crm-card-empty">{{ __('laravel-crm-filament::labels.sections.no_notes_yet') }}</div>
     @endforelse
 </div>

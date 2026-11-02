@@ -61,7 +61,7 @@ class CrmNotesRelationManager extends NotesRelationManager
         ]);
 
         Notification::make()
-            ->title('Note added')
+            ->title(__('laravel-crm-filament::labels.notifications.note_added'))
             ->success()
             ->send();
     }
@@ -124,7 +124,7 @@ class CrmNotesRelationManager extends NotesRelationManager
         ]);
 
         Notification::make()
-            ->title('Note updated')
+            ->title(__('laravel-crm-filament::labels.notifications.note_updated'))
             ->success()
             ->send();
     }
@@ -148,7 +148,7 @@ class CrmNotesRelationManager extends NotesRelationManager
         }
 
         Notification::make()
-            ->title('Note deleted')
+            ->title(__('laravel-crm-filament::labels.notifications.note_deleted'))
             ->success()
             ->send();
     }

@@ -85,7 +85,7 @@ class CrmCallsRelationManager extends CallsRelationManager
         $this->form->fill($this->defaultFormData());
 
         Notification::make()
-            ->title('Call added')
+            ->title(__('laravel-crm-filament::labels.notifications.call_added'))
             ->success()
             ->send();
     }
@@ -155,7 +155,7 @@ class CrmCallsRelationManager extends CallsRelationManager
         $this->form->fill($this->defaultFormData());
 
         Notification::make()
-            ->title('Call updated')
+            ->title(__('laravel-crm-filament::labels.notifications.call_updated'))
             ->success()
             ->send();
     }
@@ -176,7 +176,7 @@ class CrmCallsRelationManager extends CallsRelationManager
         }
 
         Notification::make()
-            ->title('Call deleted')
+            ->title(__('laravel-crm-filament::labels.notifications.call_deleted'))
             ->success()
             ->send();
     }

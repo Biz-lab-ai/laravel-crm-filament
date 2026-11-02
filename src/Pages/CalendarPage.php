@@ -5,6 +5,7 @@ namespace VentureDrake\LaravelCrmFilament\Pages;
 use BackedEnum;
 use Carbon\Carbon;
 use Filament\Pages\Page;
+use Illuminate\Contracts\Support\Htmlable;
 use VentureDrake\LaravelCrm\Models\Activity;
 use VentureDrake\LaravelCrm\Models\Call;
 use VentureDrake\LaravelCrm\Models\Lunch;
@@ -28,6 +29,16 @@ class CalendarPage extends Page
     protected static ?string $slug = 'calendar';
 
     protected static ?int $navigationSort = 30;
+
+    public function getTitle(): string | Htmlable
+    {
+        return __('laravel-crm-filament::labels.misc.calendar');
+    }
+
+    public static function getNavigationLabel(): string | Htmlable
+    {
+        return __('laravel-crm-filament::labels.misc.calendar');
+    }
 
     protected string $view = 'laravel-crm-filament::calendar.index';
 
@@ -123,7 +134,7 @@ class CalendarPage extends Page
             foreach ($records as $record) {
                 $events[] = [
                     'id' => $type . ':' . $record->external_id,
-                    'title' => $record->name ?? ucfirst($type),
+                    'title' => $record->name ?? __('laravel-crm-filament::labels.entities.'.$type),
                     'start' => optional($record->start_at)->toIso8601String(),
                     'allDay' => false,
                     'extendedProps' => [

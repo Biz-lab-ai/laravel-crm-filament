@@ -31,7 +31,7 @@ class ExportsCsv
     public static function action(array $columns, string $filename = 'export', string $label = 'Export CSV'): BulkAction
     {
         return BulkAction::make('exportCsv')
-            ->label($label)
+            ->label(__($label))
             ->icon('heroicon-o-arrow-down-tray')
             ->color('gray')
             ->deselectRecordsAfterCompletion()

@@ -5,10 +5,10 @@
     </div>
     <div class="crm-card-badges">
         @if ($record->start_at)
-            <span class="crm-card-pill">{{ __('laravel-crm-filament::labels.money.start_at') }} {{ $record->start_at->format('h:i A') }} on {{ $record->start_at->format('M d, Y') }}</span>
+            <span class="crm-card-pill">{{ __('laravel-crm-filament::labels.money.start_at') }} {{ $record->start_at->format('H:i') }} · {{ $record->start_at->format('d.m.Y') }}</span>
         @endif
         @if ($record->finish_at)
-            <span class="crm-card-pill">{{ __('laravel-crm-filament::labels.money.finish_at') }} {{ $record->finish_at->format('h:i A') }} on {{ $record->finish_at->format('M d, Y') }}</span>
+            <span class="crm-card-pill">{{ __('laravel-crm-filament::labels.money.finish_at') }} {{ $record->finish_at->format('H:i') }} · {{ $record->finish_at->format('d.m.Y') }}</span>
         @endif
     </div>
 

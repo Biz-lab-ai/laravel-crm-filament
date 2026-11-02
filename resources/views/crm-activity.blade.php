@@ -27,7 +27,7 @@
         </div>
         <div class="crm-timeline-body">
             <div class="crm-timeline-title">{{ $title }}</div>
-            <div class="crm-timeline-subtitle">{{ $activity->created_at?->format('m/d/Y h:i A') }}</div>
+            <div class="crm-timeline-subtitle">{{ $activity->created_at?->format('d.m.Y H:i') }}</div>
             @if ($related ?? false)
                 <div class="crm-card-badges">
                     @include('laravel-crm-filament::partials.crm-related-badge', ['related' => true])
@@ -70,7 +70,7 @@
         @forelse ($activityRows as $i => $activity)
             @include('laravel-crm-filament::crm-activity', ['activity' => $activity, 'last' => $loop->last, 'related' => $this->isRelatedActivityRecord($activity)])
         @empty
-            <div class="crm-card-empty">No activity yet.</div>
+            <div class="crm-card-empty">{{ __('laravel-crm-filament::labels.dashboard.no_activity_yet') }}</div>
         @endforelse
     </div>
 @endif

@@ -31,14 +31,14 @@
     </style>
 
     <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
-        <label style="font-size:0.75rem; color:#6b7280;">Owner</label>
+        <label style="font-size:0.75rem; color:#6b7280;">{{ __('laravel-crm-filament::labels.fields.owner') }}</label>
         @if ($this->ownerSearchEnabled())
-            <input type="search" wire:model.live.debounce.300ms="ownerSearch" placeholder="Search owners…" autocomplete="off"
+            <input type="search" wire:model.live.debounce.300ms="ownerSearch" placeholder="{{ __('laravel-crm-filament::labels.misc.search_owners') }}" autocomplete="off"
                    style="font-size:0.875rem; padding:0.375rem 0.5rem; border-radius:0.375rem; border:1px solid #d1d5db; background:#fff;">
         @endif
         <select wire:model.live="ownerFilter"
                 style="font-size:0.875rem; padding:0.375rem 0.5rem; border-radius:0.375rem; border:1px solid #d1d5db; background:#fff;">
-            <option value="">Everyone</option>
+            <option value="">{{ __('laravel-crm-filament::labels.misc.everyone') }}</option>
             @foreach ($this->getOwners() as $id => $name)
                 <option value="{{ $id }}">{{ $name }}</option>
             @endforeach
@@ -89,9 +89,9 @@
                             <div data-deal-id="{{ $deal->external_id }}" class="crm-kanban-card">
                                 <div class="crm-kanban-actions">
                                     <button type="button" wire:click.stop="markWon('{{ $deal->external_id }}')"
-                                            class="crm-kanban-btn crm-kanban-btn-success" title="Mark won">Won</button>
+                                            class="crm-kanban-btn crm-kanban-btn-success" title="{{ __('laravel-crm-filament::labels.actions.mark_won') }}">{{ __('laravel-crm-filament::labels.status.won') }}</button>
                                     <button type="button" wire:click.stop="markLost('{{ $deal->external_id }}')"
-                                            class="crm-kanban-btn crm-kanban-btn-danger" title="Mark lost">Lost</button>
+                                            class="crm-kanban-btn crm-kanban-btn-danger" title="{{ __('laravel-crm-filament::labels.actions.mark_lost') }}">{{ __('laravel-crm-filament::labels.status.lost') }}</button>
                                 </div>
                                 <a href="{{ route('filament.crm.resources.deals.edit', ['record' => $deal->external_id]) }}"
                                    class="crm-kanban-card-link">
@@ -101,7 +101,7 @@
                                         <div class="crm-kanban-card-amount">{{ \VentureDrake\LaravelCrmFilament\Support\MoneyForm::display($deal->amount, $deal->currency) }}</div>
                                     @endif
                                     @if ($deal->expected_close)
-                                        <div class="crm-kanban-card-meta">Closes {{ \Carbon\Carbon::parse($deal->expected_close)->format('M j') }}</div>
+                                        <div class="crm-kanban-card-meta">{{ __('laravel-crm-filament::labels.sales.closes') }} {{ \Carbon\Carbon::parse($deal->expected_close)->format('d.m') }}</div>
                                     @endif
                                 </a>
                             </div>
@@ -109,7 +109,7 @@
                     </div>
                 </div>
             @empty
-                <div class="crm-kanban-empty">No pipeline stages configured for Deals.</div>
+                <div class="crm-kanban-empty">{{ __('laravel-crm-filament::labels.sections.no_stages_for', ['entity' => __('laravel-crm-filament::labels.entities.deals')]) }}</div>
             @endforelse
         </div>
     </div>

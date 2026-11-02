@@ -82,7 +82,7 @@
                     class="crm-btn @if ($tab === $t) is-active @endif"
                     data-tab="{{ $t }}"
                 >
-                    {{ ucfirst($t) }}
+                    {{ __('laravel-crm-filament::labels.entities.'.$t) }}
                 </button>
             @endforeach
         </div>
@@ -92,7 +92,7 @@
                 @forelse ($activities as $activity)
                     @include('laravel-crm-filament::crm-activity', ['activity' => $activity, 'last' => $loop->last])
                 @empty
-                    <div class="crm-card-empty">No activity yet.</div>
+                    <div class="crm-card-empty">{{ __('laravel-crm-filament::labels.dashboard.no_activity_yet') }}</div>
                 @endforelse
             </div>
         </div>

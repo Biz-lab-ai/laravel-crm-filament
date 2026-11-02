@@ -4,6 +4,7 @@ namespace VentureDrake\LaravelCrmFilament\Resources\Tasks\Pages;
 
 use BackedEnum;
 use Filament\Resources\Pages\Page;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Collection;
 use VentureDrake\LaravelCrm\Models\Task;
 use VentureDrake\LaravelCrmFilament\Concerns\AuthorizesKanbanBoard;
@@ -20,6 +21,16 @@ class TaskKanban extends Page
     protected static ?string $title = 'Task kanban';
 
     protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-view-columns';
+
+    public function getTitle(): string | Htmlable
+    {
+        return __('laravel-crm-filament::labels.sections.task_kanban');
+    }
+
+    public static function getNavigationLabel(): string | Htmlable
+    {
+        return __('laravel-crm-filament::labels.sections.task_kanban');
+    }
 
     /**
      * Returns tasks grouped into the four status columns the AC enumerates.

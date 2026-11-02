@@ -151,6 +151,7 @@ class QuoteResource extends Resource
                     ->toggleable(),
 
                 Tables\Columns\TextColumn::make('title')
+                    ->label(__('laravel-crm-filament::labels.fields.title'))
                     ->sortable()
                     ->limit(50)
                     ->searchable(query: fn (Builder $query, string $search): Builder => EncryptedContactSearch::titleOrContact($query, $search)),
@@ -207,11 +208,12 @@ class QuoteResource extends Resource
                     ->label(__('laravel-crm-filament::labels.fields.labels'))
                     ->multiple()
                     ->relationship('labels', 'name')
+                    ->getOptionLabelFromRecordUsing(fn (Model $record): string => (string) $record->name)
                     ->preload(),
 
                 Tables\Filters\SelectFilter::make('pipeline_stage_id')
                     ->label(__('laravel-crm-filament::labels.sales.stage'))
-                    ->options(fn () => PipelineStage::query()->orderBy('order')->pluck('name', 'id')),
+                    ->options(fn () => PipelineStage::query()->orderBy('order')->get()->mapWithKeys(fn (PipelineStage $stage) => [$stage->id => $stage->name])),
             ])
             ->recordActions([
                 static::sendActionFactory()
@@ -238,13 +240,17 @@ class QuoteResource extends Resource
                     ->button()
                     ->hiddenLabel()
                     ->icon('heroicon-m-link'),
+                // The default modal heading names the row: a record's own name is tenant data, not a caption.
                 Actions\ViewAction::make()
+                    ->modalHeading(__('laravel-crm-filament::labels.actions.view'))
                     ->button()
                     ->hiddenLabel(),
                 Actions\EditAction::make()
+                    ->modalHeading(__('laravel-crm-filament::labels.actions.edit'))
                     ->button()
                     ->hiddenLabel(),
                 Actions\DeleteAction::make()
+                    ->modalHeading(__('laravel-crm-filament::labels.actions.delete'))
                     ->button()
                     ->requiresConfirmation()
                     ->hiddenLabel(),
@@ -337,8 +343,8 @@ class QuoteResource extends Resource
             ->label(__('laravel-crm-filament::labels.actions.send'))
             ->icon('heroicon-o-paper-airplane')
             ->color('success')
-            ->modalHeading('Send quote')
-            ->modalSubmitActionLabel('Send')
+            ->modalHeading(__('laravel-crm-filament::labels.actions.send_quote'))
+            ->modalSubmitActionLabel(__('laravel-crm-filament::labels.actions.send'))
             ->schema(fn (Quote $record): array => [
                 TextInput::make('to')
                     ->label(__('laravel-crm-filament::labels.campaign.to'))
@@ -346,9 +352,11 @@ class QuoteResource extends Resource
                     ->required()
                     ->default(fn () => optional($record->person)->getPrimaryEmail()?->address),
                 TextInput::make('subject')
+                    ->label(__('laravel-crm-filament::labels.fields.subject'))
                     ->required()
                     ->default(fn () => 'Quote ' . $record->quote_id),
                 Textarea::make('message')
+                    ->label(__('laravel-crm-filament::labels.fields.message'))
                     ->rows(8)
                     ->default(fn (): string => PortalMessage::defaultMessage(PortalMessage::QUOTE)),
                 Checkbox::make('cc')
@@ -358,7 +366,7 @@ class QuoteResource extends Resource
                 static::dispatchQuoteSend($record, $data);
 
                 Notification::make()
-                    ->title('Quote sent')
+                    ->title(__('laravel-crm-filament::labels.notifications.quote_sent'))
                     ->success()
                     ->send();
             });

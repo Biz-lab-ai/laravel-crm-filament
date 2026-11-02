@@ -84,7 +84,7 @@
                                 <button
                                     type="button"
                                     wire:click="deleteFile({{ $file->id }})"
-                                    wire:confirm="Delete this file?"
+                                    wire:confirm="{{ __('laravel-crm-filament::labels.actions.delete_this', ['entity' => __('laravel-crm-filament::labels.entities.file')]) }}"
                                     @click="open = false"
                                     class="crm-card-dropdown-item crm-card-dropdown-item--danger"
                                     role="menuitem"
@@ -112,6 +112,6 @@
             </div>
         </div>
     @empty
-        <div class="crm-card-empty">No files yet.</div>
+        <div class="crm-card-empty">{{ __('laravel-crm-filament::labels.sections.no_files_yet') }}</div>
     @endforelse
 </div>

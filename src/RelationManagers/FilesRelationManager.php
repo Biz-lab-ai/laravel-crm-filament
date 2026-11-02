@@ -20,7 +20,10 @@ class FilesRelationManager extends RelationManager
 
     protected static string $relationship = 'files';
 
-    protected static ?string $title = 'Files';
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return __('laravel-crm-filament::labels.entities.files');
+    }
 
     public function form(Schema $schema): Schema
     {

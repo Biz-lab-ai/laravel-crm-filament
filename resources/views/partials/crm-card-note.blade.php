@@ -9,7 +9,7 @@
     <div class="crm-card-card-body">{{ $record->content }}</div>
     @if ($record->noted_at)
         <div class="crm-card-card-footer">
-            <span class="crm-card-pill">Noted at {{ $record->noted_at->format('h:i A') }} on {{ $record->noted_at->format('M d, Y') }}</span>
+            <span class="crm-card-pill">{{ __('laravel-crm-filament::labels.fields.noted_at_on', ['time' => $record->noted_at->format('H:i'), 'date' => $record->noted_at->format('d.m.Y')]) }}</span>
         </div>
     @endif
 </div>

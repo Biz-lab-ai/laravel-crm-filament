@@ -85,10 +85,12 @@ class DealResource extends Resource
     {
         $details = [
             Forms\Components\TextInput::make('title')
+                ->label(__('laravel-crm-filament::labels.fields.title'))
                 ->required()
                 ->maxLength(255),
 
             Forms\Components\Textarea::make('description')
+                ->label(__('laravel-crm-filament::labels.fields.description'))
                 ->rows(5)
                 ->columnSpanFull(),
 
@@ -167,6 +169,7 @@ class DealResource extends Resource
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('title')
+                    ->label(__('laravel-crm-filament::labels.fields.title'))
                     ->sortable()
                     ->limit(50)
                     ->searchable(query: fn (Builder $query, string $search): Builder => EncryptedContactSearch::titleOrContact($query, $search)),
@@ -224,13 +227,17 @@ class DealResource extends Resource
                     ->options(fn () => PipelineStage::query()->orderBy('order')->pluck('name', 'id')),
             ])
             ->recordActions([
+                // The default modal heading names the row: a record's own name is tenant data, not a caption.
                 Actions\ViewAction::make()
+                    ->modalHeading(__('laravel-crm-filament::labels.actions.view'))
                     ->button()
                     ->hiddenLabel(),
                 Actions\EditAction::make()
+                    ->modalHeading(__('laravel-crm-filament::labels.actions.edit'))
                     ->button()
                     ->hiddenLabel(),
                 Actions\DeleteAction::make()
+                    ->modalHeading(__('laravel-crm-filament::labels.actions.delete'))
                     ->button()
                     ->requiresConfirmation()
                     ->hiddenLabel(),

@@ -85,7 +85,7 @@ class CrmMeetingsRelationManager extends MeetingsRelationManager
         $this->form->fill($this->defaultFormData());
 
         Notification::make()
-            ->title('Meeting added')
+            ->title(__('laravel-crm-filament::labels.notifications.meeting_added'))
             ->success()
             ->send();
     }
@@ -155,7 +155,7 @@ class CrmMeetingsRelationManager extends MeetingsRelationManager
         $this->form->fill($this->defaultFormData());
 
         Notification::make()
-            ->title('Meeting updated')
+            ->title(__('laravel-crm-filament::labels.notifications.meeting_updated'))
             ->success()
             ->send();
     }
@@ -176,7 +176,7 @@ class CrmMeetingsRelationManager extends MeetingsRelationManager
         }
 
         Notification::make()
-            ->title('Meeting deleted')
+            ->title(__('laravel-crm-filament::labels.notifications.meeting_deleted'))
             ->success()
             ->send();
     }

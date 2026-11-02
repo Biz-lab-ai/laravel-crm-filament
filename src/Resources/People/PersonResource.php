@@ -78,26 +78,40 @@ class PersonResource extends Resource
     {
         $components = [
             Grid::make(2)->schema([
-                Forms\Components\TextInput::make('first_name')->maxLength(255),
-                Forms\Components\TextInput::make('last_name')->maxLength(255),
+                Forms\Components\TextInput::make('first_name')
+                    ->label(__('laravel-crm-filament::labels.fields.first_name'))
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('last_name')
+                    ->label(__('laravel-crm-filament::labels.fields.last_name'))
+                    ->maxLength(255),
             ]),
 
             Grid::make(2)->schema([
-                Forms\Components\TextInput::make('middle_name')->maxLength(255),
-                Forms\Components\TextInput::make('maiden_name')->maxLength(255),
+                Forms\Components\TextInput::make('middle_name')
+                    ->label(__('laravel-crm-filament::labels.fields.middle_name'))
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('maiden_name')
+                    ->label(__('laravel-crm-filament::labels.fields.maiden_name'))
+                    ->maxLength(255),
             ]),
 
             Grid::make(3)->schema([
-                Forms\Components\TextInput::make('title')->maxLength(50),
-                Forms\Components\Select::make('gender')->options([
-                    'male' => 'Male',
-                    'female' => 'Female',
-                    'other' => 'Other',
+                Forms\Components\TextInput::make('title')
+                    ->label(__('laravel-crm-filament::labels.fields.title'))
+                    ->maxLength(50),
+                Forms\Components\Select::make('gender')
+                    ->label(__('laravel-crm-filament::labels.fields.gender'))
+                    ->options([
+                    'male' => __('laravel-crm-filament::labels.misc.male'),
+                    'female' => __('laravel-crm-filament::labels.misc.female'),
+                    'other' => __('laravel-crm-filament::labels.misc.other'),
                 ]),
-                Forms\Components\DatePicker::make('birthday'),
+                Forms\Components\DatePicker::make('birthday')
+                    ->label(__('laravel-crm-filament::labels.fields.birthday')),
             ]),
 
             Forms\Components\Textarea::make('description')
+                ->label(__('laravel-crm-filament::labels.fields.description'))
                 ->rows(3)
                 ->columnSpanFull(),
 
@@ -209,13 +223,20 @@ class PersonResource extends Resource
                 return $query;
             })
             ->recordActions([
+                // The default modal heading names the row: a record's own name is tenant data, not a caption.
                 Actions\ViewAction::make()
+                    ->label(__('laravel-crm-filament::labels.actions.view'))
+                    ->modalHeading(__('laravel-crm-filament::labels.actions.view'))
                     ->button()
                     ->hiddenLabel(),
                 Actions\EditAction::make()
+                    ->label(__('laravel-crm-filament::labels.actions.edit'))
+                    ->modalHeading(__('laravel-crm-filament::labels.actions.edit'))
                     ->button()
                     ->hiddenLabel(),
                 Actions\DeleteAction::make()
+                    ->label(__('laravel-crm-filament::labels.actions.delete'))
+                    ->modalHeading(__('laravel-crm-filament::labels.actions.delete'))
                     ->button()
                     ->hiddenLabel(),
             ])
@@ -293,7 +314,7 @@ class PersonResource extends Resource
 
             TextEntry::make('gender')
                 ->label(__('laravel-crm-filament::labels.fields.gender'))
-                ->formatStateUsing(fn ($state) => $state ? ucfirst((string) $state) : null),
+                ->formatStateUsing(fn ($state) => $state ? __('laravel-crm-filament::labels.misc.'.$state) : null),
 
             TextEntry::make('birthday')
                 ->label(__('laravel-crm-filament::labels.fields.birthday')),
@@ -308,24 +329,24 @@ class PersonResource extends Resource
         }
 
         foreach ($record->phones as $i => $phone) {
-            $typePrefix = $phone->type ? ucfirst($phone->type) . ' ' : '';
+            $typePrefix = $phone->type ? __('laravel-crm-filament::labels.misc.'.$phone->type) . ' ' : '';
             $entries[] = TextEntry::make('phone_' . $i)
                 ->label($typePrefix . __('laravel-crm-filament::labels.fields.phone'))
-                ->state(trim(($phone->number ?? '') . ($phone->primary ? ' (Primary)' : '')));
+                ->state(trim(($phone->number ?? '') . ($phone->primary ? ' ('.__('laravel-crm-filament::labels.fields.primary').')' : '')));
         }
 
         foreach ($record->emails as $i => $email) {
-            $typePrefix = $email->type ? ucfirst($email->type) . ' ' : '';
+            $typePrefix = $email->type ? __('laravel-crm-filament::labels.misc.'.$email->type) . ' ' : '';
             $entries[] = TextEntry::make('email_' . $i)
                 ->label($typePrefix . __('laravel-crm-filament::labels.fields.email'))
-                ->state(trim(($email->address ?? '') . ($email->primary ? ' (Primary)' : '')));
+                ->state(trim(($email->address ?? '') . ($email->primary ? ' ('.__('laravel-crm-filament::labels.fields.primary').')' : '')));
         }
 
         foreach ($record->addresses as $i => $address) {
-            $typePrefix = $address->addressType?->name ? ucfirst($address->addressType->name) . ' ' : '';
+            $typePrefix = $address->addressType?->name ? $address->addressType->name . ' ' : '';
             $line = trim((string) static::formatAddressLine($address));
             if ($address->primary) {
-                $line = trim($line . ' (Primary)');
+                $line = trim($line . ' ('.__('laravel-crm-filament::labels.fields.primary').')');
             }
             $entries[] = TextEntry::make('address_' . $i)
                 ->label($typePrefix . __('laravel-crm-filament::labels.fields.address'))

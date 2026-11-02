@@ -54,34 +54,40 @@ class LeadDealContactSection
                     ->createOptionForm([
                         Grid::make(2)->schema([
                             Forms\Components\TextInput::make('first_name')
+                                ->label(__('laravel-crm-filament::labels.fields.first_name'))
                                 ->required()
                                 ->maxLength(255),
                             Forms\Components\TextInput::make('last_name')
+                                ->label(__('laravel-crm-filament::labels.fields.last_name'))
                                 ->maxLength(255),
                         ]),
                         Grid::make(2)->schema([
                             Forms\Components\TextInput::make('phone')
+                                ->label(__('laravel-crm-filament::labels.fields.phone'))
                                 ->tel()
                                 ->maxLength(50),
                             Forms\Components\Select::make('phone_type')
+                                ->label(__('laravel-crm-filament::labels.fields.type'))
                                 ->options([
-                                    'work' => 'Work',
-                                    'home' => 'Home',
-                                    'mobile' => 'Mobile',
-                                    'fax' => 'Fax',
-                                    'other' => 'Other',
+                                    'work' => __('laravel-crm-filament::labels.misc.work'),
+                                    'home' => __('laravel-crm-filament::labels.misc.home'),
+                                    'mobile' => __('laravel-crm-filament::labels.misc.mobile'),
+                                    'fax' => __('laravel-crm-filament::labels.misc.fax'),
+                                    'other' => __('laravel-crm-filament::labels.misc.other'),
                                 ])
                                 ->default('mobile'),
                         ]),
                         Grid::make(2)->schema([
                             Forms\Components\TextInput::make('email')
+                                ->label(__('laravel-crm-filament::labels.contact.email'))
                                 ->email()
                                 ->maxLength(255),
                             Forms\Components\Select::make('email_type')
+                                ->label(__('laravel-crm-filament::labels.fields.type'))
                                 ->options([
-                                    'work' => 'Work',
-                                    'home' => 'Home',
-                                    'other' => 'Other',
+                                    'work' => __('laravel-crm-filament::labels.misc.work'),
+                                    'home' => __('laravel-crm-filament::labels.misc.home'),
+                                    'other' => __('laravel-crm-filament::labels.misc.other'),
                                 ])
                                 ->default('work'),
                         ]),

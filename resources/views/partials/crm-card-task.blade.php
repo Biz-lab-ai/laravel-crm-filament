@@ -10,7 +10,7 @@
             <span class="crm-card-badge crm-card-badge--primary">{{ __('laravel-crm-filament::labels.status.pending') }}</span>
         @endif
         @if ($record->due_at)
-            <span class="crm-card-pill">{{ __('laravel-crm-filament::labels.money.due') }} {{ $record->due_at->format('h:i A') }} on {{ $record->due_at->format('M d, Y') }}</span>
+            <span class="crm-card-pill">{{ __('laravel-crm-filament::labels.money.due') }} {{ $record->due_at->format('H:i') }} · {{ $record->due_at->format('d.m.Y') }}</span>
         @endif
     </div>
     @if ($record->description)

@@ -26,8 +26,8 @@ class ViewPerson extends ViewRecord
     {
         return [
             PersonResource::backToIndexAction(),
-            Actions\EditAction::make()->icon('heroicon-m-pencil-square')->hiddenLabel()->tooltip('Edit'),
-            Actions\DeleteAction::make()->icon('heroicon-m-trash')->hiddenLabel()->tooltip('Delete'),
+            Actions\EditAction::make()->icon('heroicon-m-pencil-square')->hiddenLabel()->tooltip(__('laravel-crm-filament::labels.actions.edit'))->modalHeading(__('laravel-crm-filament::labels.actions.edit')),
+            Actions\DeleteAction::make()->icon('heroicon-m-trash')->hiddenLabel()->tooltip(__('laravel-crm-filament::labels.actions.delete'))->modalHeading(__('laravel-crm-filament::labels.actions.delete')),
         ];
     }
 

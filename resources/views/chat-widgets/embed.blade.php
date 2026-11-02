@@ -70,20 +70,20 @@
         }"
     >
         <div class="lcf-embed-card">
-            <h2>Embed snippet</h2>
+            <h2>{{ __('laravel-crm-filament::labels.chat.embed_snippet') }}</h2>
             <p class="lcf-help">
                 Paste this <code>&lt;script&gt;</code> tag just before the closing
                 <code>&lt;/body&gt;</code> tag on any page where you want the chat widget to appear.
             </p>
             <code x-ref="snippet" class="lcf-embed-snippet">{{ $snippet }}</code>
             <button type="button" class="lcf-copy-btn" @click="copy()">
-                <span x-show="!copied">Copy to clipboard</span>
-                <span x-show="copied" x-cloak>Copied!</span>
+                <span x-show="!copied">{{ __('laravel-crm-filament::labels.chat.copy_to_clipboard') }}</span>
+                <span x-show="copied" x-cloak>{{ __('laravel-crm-filament::labels.chat.copied') }}</span>
             </button>
         </div>
 
         <div class="lcf-embed-card">
-            <h2>Live preview</h2>
+            <h2>{{ __('laravel-crm-filament::labels.chat.live_preview') }}</h2>
             <p class="lcf-help">
                 This is exactly what visitors to <strong>{{ $widget->name }}</strong> will see.
             </p>

@@ -92,7 +92,7 @@ class CrmLunchesRelationManager extends LunchesRelationManager
         $this->form->fill($this->defaultFormData());
 
         Notification::make()
-            ->title('Lunch added')
+            ->title(__('laravel-crm-filament::labels.notifications.lunch_added'))
             ->success()
             ->send();
     }
@@ -162,7 +162,7 @@ class CrmLunchesRelationManager extends LunchesRelationManager
         $this->form->fill($this->defaultFormData());
 
         Notification::make()
-            ->title('Lunch updated')
+            ->title(__('laravel-crm-filament::labels.notifications.lunch_updated'))
             ->success()
             ->send();
     }
@@ -183,7 +183,7 @@ class CrmLunchesRelationManager extends LunchesRelationManager
         }
 
         Notification::make()
-            ->title('Lunch deleted')
+            ->title(__('laravel-crm-filament::labels.notifications.lunch_deleted'))
             ->success()
             ->send();
     }

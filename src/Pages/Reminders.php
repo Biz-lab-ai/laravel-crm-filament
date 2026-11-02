@@ -13,6 +13,8 @@ use Filament\Pages\Page;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\Str;
 use VentureDrake\LaravelCrm\Models\Setting;
 use VentureDrake\LaravelCrmFilament\Concerns\AuthorizesCrmSettingsPage;
 
@@ -45,6 +47,16 @@ class Reminders extends Page implements HasForms
     protected static ?string $slug = 'reminders';
 
     protected static ?int $navigationSort = 190;
+
+    public function getTitle(): string | Htmlable
+    {
+        return __('laravel-crm-filament::labels.entities.reminders');
+    }
+
+    public static function getNavigationLabel(): string | Htmlable
+    {
+        return __('laravel-crm-filament::labels.entities.reminders');
+    }
 
     /**
      * Never a top-level nav entry — reached from the user menu / settings
@@ -84,13 +96,13 @@ class Reminders extends Page implements HasForms
     public function form(Schema $schema): Schema
     {
         $components = [];
-        foreach (static::TYPES as $type => $label) {
-            $components[] = Section::make($label)
+        foreach (array_keys(static::TYPES) as $type) {
+            $components[] = Section::make(__('laravel-crm-filament::labels.entities.'.Str::plural($type)))
                 ->key("section_{$type}")
                 ->schema([
                     Grid::make(2)->schema([
                         Checkbox::make("{$type}_enabled")
-                            ->label("Email me before each {$type}"),
+                            ->label(__('laravel-crm-filament::labels.reminders.email_me_before_'.$type)),
                         TextInput::make("{$type}_hours")
                             ->label(__('laravel-crm-filament::labels.misc.hours_before'))
                             ->numeric()
@@ -132,7 +144,7 @@ class Reminders extends Page implements HasForms
         }
 
         Notification::make()
-            ->title('Reminder preferences saved')
+            ->title(__('laravel-crm-filament::labels.notifications.reminder_preferences_saved'))
             ->success()
             ->send();
     }

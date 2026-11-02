@@ -29,19 +29,20 @@ class ContactFieldsSchema
                     ->tel()
                     ->maxLength(50),
                 Forms\Components\Select::make('type')
+                    ->label(__('laravel-crm-filament::labels.fields.type'))
                     ->options([
-                        'work' => 'Work',
-                        'home' => 'Home',
-                        'mobile' => 'Mobile',
-                        'fax' => 'Fax',
-                        'other' => 'Other',
+                        'work' => __('laravel-crm-filament::labels.misc.work'),
+                        'home' => __('laravel-crm-filament::labels.misc.home'),
+                        'mobile' => __('laravel-crm-filament::labels.misc.mobile'),
+                        'fax' => __('laravel-crm-filament::labels.misc.fax'),
+                        'other' => __('laravel-crm-filament::labels.misc.other'),
                     ]),
                 Forms\Components\Toggle::make('primary')
                     ->label(__('laravel-crm-filament::labels.fields.primary'))
                     ->default(false),
             ])
             ->columns(4)
-            ->addActionLabel('Add phone')
+            ->addActionLabel(__('laravel-crm-filament::labels.actions.add_phone'))
             ->defaultItems(0)
             ->reorderable(false)
             ->columnSpanFull();
@@ -59,17 +60,18 @@ class ContactFieldsSchema
                     ->email()
                     ->maxLength(255),
                 Forms\Components\Select::make('type')
+                    ->label(__('laravel-crm-filament::labels.fields.type'))
                     ->options([
-                        'work' => 'Work',
-                        'home' => 'Home',
-                        'other' => 'Other',
+                        'work' => __('laravel-crm-filament::labels.misc.work'),
+                        'home' => __('laravel-crm-filament::labels.misc.home'),
+                        'other' => __('laravel-crm-filament::labels.misc.other'),
                     ]),
                 Forms\Components\Toggle::make('primary')
                     ->label(__('laravel-crm-filament::labels.fields.primary'))
                     ->default(false),
             ])
             ->columns(4)
-            ->addActionLabel('Add email')
+            ->addActionLabel(__('laravel-crm-filament::labels.actions.add_email'))
             ->defaultItems(0)
             ->reorderable(false)
             ->columnSpanFull();
@@ -91,7 +93,7 @@ class ContactFieldsSchema
                 Forms\Components\Toggle::make('primary')->label(__('laravel-crm-filament::labels.fields.primary'))->default(false),
             ])
             ->columns(2)
-            ->addActionLabel('Add address')
+            ->addActionLabel(__('laravel-crm-filament::labels.actions.add_address'))
             ->defaultItems(0)
             ->reorderable(false)
             ->columnSpanFull();

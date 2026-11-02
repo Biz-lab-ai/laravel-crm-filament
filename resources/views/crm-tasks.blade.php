@@ -192,7 +192,7 @@
                                 <button
                                     type="button"
                                     wire:click="deleteTask({{ $task->id }})"
-                                    wire:confirm="Delete this task?"
+                                    wire:confirm="{{ __('laravel-crm-filament::labels.actions.delete_this', ['entity' => __('laravel-crm-filament::labels.entities.task')]) }}"
                                     @click="open = false"
                                     class="crm-card-dropdown-item crm-card-dropdown-item--danger"
                                     role="menuitem"
@@ -209,7 +209,7 @@
                         <span class="crm-card-badge crm-card-badge--primary">{{ __('laravel-crm-filament::labels.status.pending') }}</span>
                     @endif
                     @if ($task->due_at)
-                        <span class="crm-card-pill">{{ __('laravel-crm-filament::labels.money.due') }} {{ $task->due_at->format('h:i A') }} on {{ $task->due_at->format('M d, Y') }}</span>
+                        <span class="crm-card-pill">{{ __('laravel-crm-filament::labels.money.due') }} {{ $task->due_at->format('H:i') }} · {{ $task->due_at->format('d.m.Y') }}</span>
                     @endif
                 </div>
                 @if ($task->description)
@@ -231,6 +231,6 @@
             @endif
         </div>
     @empty
-        <div class="crm-card-empty">No tasks yet.</div>
+        <div class="crm-card-empty">{{ __('laravel-crm-filament::labels.sections.no_tasks_yet') }}</div>
     @endforelse
 </div>

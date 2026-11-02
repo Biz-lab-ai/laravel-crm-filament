@@ -80,7 +80,7 @@
                                 <button
                                     type="button"
                                     wire:click="deleteMeeting({{ $meeting->id }})"
-                                    wire:confirm="Delete this meeting?"
+                                    wire:confirm="{{ __('laravel-crm-filament::labels.actions.delete_this', ['entity' => __('laravel-crm-filament::labels.entities.meeting')]) }}"
                                     @click="open = false"
                                     class="crm-card-dropdown-item crm-card-dropdown-item--danger"
                                     role="menuitem"
@@ -92,10 +92,10 @@
                 <div class="crm-card-badges">
                     @include('laravel-crm-filament::partials.crm-related-badge', ['related' => $isRelated])
                     @if ($meeting->start_at)
-                        <span class="crm-card-pill">{{ __('laravel-crm-filament::labels.money.start_at') }} {{ $meeting->start_at->format('h:i A') }} on {{ $meeting->start_at->format('M d, Y') }}</span>
+                        <span class="crm-card-pill">{{ __('laravel-crm-filament::labels.money.start_at') }} {{ $meeting->start_at->format('H:i') }} · {{ $meeting->start_at->format('d.m.Y') }}</span>
                     @endif
                     @if ($meeting->finish_at)
-                        <span class="crm-card-pill">{{ __('laravel-crm-filament::labels.money.finish_at') }} {{ $meeting->finish_at->format('h:i A') }} on {{ $meeting->finish_at->format('M d, Y') }}</span>
+                        <span class="crm-card-pill">{{ __('laravel-crm-filament::labels.money.finish_at') }} {{ $meeting->finish_at->format('H:i') }} · {{ $meeting->finish_at->format('d.m.Y') }}</span>
                     @endif
                 </div>
 
@@ -131,6 +131,6 @@
             @endif
         </div>
     @empty
-        <div class="crm-card-empty">No meetings yet.</div>
+        <div class="crm-card-empty">{{ __('laravel-crm-filament::labels.sections.no_meetings_yet') }}</div>
     @endforelse
 </div>

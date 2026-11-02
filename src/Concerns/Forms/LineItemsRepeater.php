@@ -70,6 +70,7 @@ class LineItemsRepeater
                     self::recalcFormTotals($get, $set);
                 }),
             Forms\Components\TextInput::make('quantity')
+                ->label(__('laravel-crm-filament::labels.fields.quantity'))
                 ->numeric()
                 // decimal(15,3) as of core 2.4.0 — a delivery of 0.5 of a
                 // 3-metre length is a real thing to record.
@@ -114,7 +115,9 @@ class LineItemsRepeater
         return Forms\Components\Repeater::make('products')
             ->label(__('laravel-crm-filament::labels.money.line_items'))
             ->schema(array_values(array_filter([
-                Forms\Components\Hidden::make($fkColumn),
+                // Hidden yet labelled: Filament still hands the default label to schema readers.
+                Forms\Components\Hidden::make($fkColumn)
+                    ->label(__('laravel-crm-filament::labels.fields.quote_product_id')),
                 // Opt-in, because only the drawdown forms carry the linkage.
                 $withOrderProductId ? Forms\Components\Hidden::make('order_product_id') : null,
                 Forms\Components\Select::make('id')
@@ -136,6 +139,7 @@ class LineItemsRepeater
                     }),
                 Grid::make($row2Cols)->schema($row2Fields),
                 Forms\Components\Textarea::make('comments')
+                    ->label(__('laravel-crm-filament::labels.fields.comments'))
                     ->rows(2)
                     ->maxLength(255),
             ])))

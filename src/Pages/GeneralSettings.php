@@ -20,7 +20,9 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Schema;
+use Illuminate\Contracts\Support\Htmlable;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Intl\Locale;
 use VentureDrake\LaravelCrm\Models\Address;
 use VentureDrake\LaravelCrm\Models\AddressType;
 use VentureDrake\LaravelCrm\Models\Email;
@@ -59,6 +61,16 @@ class GeneralSettings extends Page implements HasForms
     protected static string | \UnitEnum | null $navigationGroup = 'Settings';
 
     protected static ?string $title = 'General';
+
+    public function getTitle(): string | Htmlable
+    {
+        return __('laravel-crm-filament::labels.sections.settings');
+    }
+
+    public static function getNavigationLabel(): string | Htmlable
+    {
+        return __('laravel-crm-filament::labels.sections.settings');
+    }
 
     protected static ?string $slug = 'general';
 
@@ -223,6 +235,7 @@ class GeneralSettings extends Page implements HasForms
             ->statePath('data')
             ->components([
                 Tabs::make('settings')
+                    ->label(__('laravel-crm-filament::labels.sections.settings'))
                     ->persistTabInQueryString()
                     ->columnSpanFull()
                     ->tabs([
@@ -266,24 +279,24 @@ class GeneralSettings extends Page implements HasForms
         $prefixKey = static::ENTITY_TABS[$tab]['prefix'];
 
         $components = [
-            TextInput::make($prefixKey)->label(static::KEYS[$prefixKey])->maxLength(10),
+            TextInput::make($prefixKey)->label(__(static::KEYS[$prefixKey]))->maxLength(10),
         ];
 
         return [...$components, ...match ($tab) {
             'quotes' => [
-                Textarea::make('quote_terms')->label(static::KEYS['quote_terms'])->rows(3),
+                Textarea::make('quote_terms')->label(__(static::KEYS['quote_terms']))->rows(3),
             ],
             'invoices' => [
                 Textarea::make('invoice_contact_details')
-                    ->label(static::KEYS['invoice_contact_details'])
-                    ->helperText('Overrides the shared contact details on the General tab, on invoice PDFs only.')
+                    ->label(__(static::KEYS['invoice_contact_details']))
+                    ->helperText(__('Overrides the shared contact details on the General tab, on invoice PDFs only.'))
                     ->rows(3),
-                Textarea::make('invoice_terms')->label(static::KEYS['invoice_terms'])->rows(3),
-                Textarea::make('invoice_payment_instructions')->label(static::KEYS['invoice_payment_instructions'])->rows(3),
+                Textarea::make('invoice_terms')->label(__(static::KEYS['invoice_terms']))->rows(3),
+                Textarea::make('invoice_payment_instructions')->label(__(static::KEYS['invoice_payment_instructions']))->rows(3),
             ],
             'purchase_orders' => [
-                Textarea::make('purchase_order_terms')->label(static::KEYS['purchase_order_terms'])->rows(3),
-                Textarea::make('purchase_order_delivery_instructions')->label(static::KEYS['purchase_order_delivery_instructions'])->rows(3),
+                Textarea::make('purchase_order_terms')->label(__(static::KEYS['purchase_order_terms']))->rows(3),
+                Textarea::make('purchase_order_delivery_instructions')->label(__(static::KEYS['purchase_order_delivery_instructions']))->rows(3),
             ],
             default => [],
         }];
@@ -301,11 +314,11 @@ class GeneralSettings extends Page implements HasForms
                 ->heading(__('laravel-crm-filament::labels.sections.branding'))
                 ->schema([
                     Grid::make(2)->schema([
-                        TextInput::make('organization_name')->label(static::KEYS['organization_name'])->maxLength(255),
-                        TextInput::make('vat_number')->label(static::KEYS['vat_number'])->maxLength(255),
+                        TextInput::make('organization_name')->label(__(static::KEYS['organization_name']))->maxLength(255),
+                        TextInput::make('vat_number')->label(__(static::KEYS['vat_number']))->maxLength(255),
                     ]),
                     FileUpload::make('logo_upload')
-                        ->label(static::KEYS['logo_file'])
+                        ->label(__(static::KEYS['logo_file']))
                         ->image()
                         // ->image() alone maps to `mimetypes:image/*`, which
                         // accepts image/svg+xml. An SVG is script-bearing
@@ -336,7 +349,7 @@ class GeneralSettings extends Page implements HasForms
                                 ->visible(fn (): bool => static::canEditCrmSettings() && $this->hasLogo())
                                 ->action(fn () => $this->deleteLogo()),
                         ),
-                    ColorPicker::make('primary_color')->label(static::KEYS['primary_color']),
+                    ColorPicker::make('primary_color')->label(__(static::KEYS['primary_color'])),
                 ]),
 
             Section::make('localisation')
@@ -344,26 +357,26 @@ class GeneralSettings extends Page implements HasForms
                 ->schema([
                     Grid::make(2)->schema([
                         Select::make('language')
-                            ->label(static::KEYS['language'])
+                            ->label(__(static::KEYS['language']))
                             ->options(static::languageOptions())
                             ->searchable(),
                         Select::make('country')
-                            ->label(static::KEYS['country'])
+                            ->label(__(static::KEYS['country']))
                             ->options(static::countryOptions())
                             ->searchable(),
                         Select::make('currency')
-                            ->label(static::KEYS['currency'])
+                            ->label(__(static::KEYS['currency']))
                             ->options(static::currencyOptions())
                             ->searchable(),
                         Select::make('timezone')
-                            ->label(static::KEYS['timezone'])
+                            ->label(__(static::KEYS['timezone']))
                             ->options(static::timezoneOptions())
                             ->searchable(),
                         Select::make('date_format')
-                            ->label(static::KEYS['date_format'])
+                            ->label(__(static::KEYS['date_format']))
                             ->options(static::dateFormatOptions()),
                         Select::make('time_format')
-                            ->label(static::KEYS['time_format'])
+                            ->label(__(static::KEYS['time_format']))
                             ->options(static::timeFormatOptions()),
                     ]),
                 ]),
@@ -375,8 +388,8 @@ class GeneralSettings extends Page implements HasForms
                     // to their own tabs, which is the whole point of the
                     // split. This one is account-wide, so it stays here.
                     Textarea::make(PdfContactDetails::SHARED_KEY)
-                        ->label(static::KEYS[PdfContactDetails::SHARED_KEY])
-                        ->helperText('Shown in the "from" block on quote, order, delivery and invoice PDFs, unless the document type overrides it on its own tab; the classic template shows this block on invoices only.')
+                        ->label(__(static::KEYS[PdfContactDetails::SHARED_KEY]))
+                        ->helperText(__('Shown in the "from" block on quote, order, delivery and invoice PDFs, unless the document type overrides it on its own tab; the classic template shows this block on invoices only.'))
                         ->rows(3),
                 ]),
 
@@ -384,22 +397,23 @@ class GeneralSettings extends Page implements HasForms
                 ->heading(__('laravel-crm-filament::labels.sections.tax'))
                 ->schema([
                     Grid::make(2)->schema([
-                        TextInput::make('tax_name')->label(static::KEYS['tax_name'])->maxLength(255),
-                        TextInput::make('tax_rate')->label(static::KEYS['tax_rate'])->numeric()->suffix('%'),
+                        TextInput::make('tax_name')->label(__(static::KEYS['tax_name']))->maxLength(255),
+                        TextInput::make('tax_rate')->label(__(static::KEYS['tax_rate']))->numeric()->suffix('%'),
                     ]),
                 ]),
 
             Section::make('behaviour')
                 ->heading(__('laravel-crm-filament::labels.sections.behaviour'))
                 ->schema([
-                    Toggle::make('show_related_activity')->label(static::KEYS['show_related_activity']),
-                    Toggle::make('dynamic_products')->label(static::KEYS['dynamic_products']),
+                    Toggle::make('show_related_activity')->label(__(static::KEYS['show_related_activity'])),
+                    Toggle::make('dynamic_products')->label(__(static::KEYS['dynamic_products'])),
                 ]),
 
             Section::make('phones')
                 ->heading(__('laravel-crm-filament::labels.contact.phone_numbers'))
                 ->schema([
                     Repeater::make('phones')
+                        ->label(__('laravel-crm-filament::labels.contact.phone_numbers'))
                         ->hiddenLabel()
                         ->schema([
                             Hidden::make('id'),
@@ -424,6 +438,7 @@ class GeneralSettings extends Page implements HasForms
                 ->heading(__('laravel-crm-filament::labels.contact.email_addresses'))
                 ->schema([
                     Repeater::make('emails')
+                        ->label(__('laravel-crm-filament::labels.contact.email_addresses'))
                         ->hiddenLabel()
                         ->schema([
                             Hidden::make('id'),
@@ -448,12 +463,13 @@ class GeneralSettings extends Page implements HasForms
                 ->heading(__('laravel-crm-filament::labels.contact.addresses'))
                 ->schema([
                     Repeater::make('addresses')
+                        ->label(__('laravel-crm-filament::labels.contact.addresses'))
                         ->hiddenLabel()
                         ->schema([
                             Hidden::make('id'),
                             Select::make('address_type_id')
                                 ->label(__('laravel-crm-filament::labels.fields.type'))
-                                ->options(fn () => AddressType::query()->orderBy('name')->pluck('name', 'id')->toArray()),
+                                ->options(fn () => AddressType::query()->orderBy('name')->get()->mapWithKeys(fn (AddressType $type) => [$type->id => $type->name])),
                             TextInput::make('line1')->label(__('laravel-crm-filament::labels.contact.line1'))->maxLength(255),
                             TextInput::make('line2')->label(__('laravel-crm-filament::labels.contact.line2'))->maxLength(255),
                             TextInput::make('line3')->label(__('laravel-crm-filament::labels.contact.line3'))->maxLength(255),
@@ -749,15 +765,8 @@ class GeneralSettings extends Page implements HasForms
 
     protected static function localeLabel(string $locale): string
     {
-        $labels = [
-            'english' => 'English',
-            'en_au' => 'English (Australia)',
-            'en_gb' => 'English (United Kingdom)',
-            'es' => 'Spanish',
-            'fr' => 'French',
-        ];
-
-        return $labels[$locale] ?? ucfirst(str_replace('_', '-', $locale));
+        // ICU names the locale in the reader's own words; `english` is base's stored value for `en`.
+        return Locale::getDisplayName(str_replace(['english', '_'], ['en', '-'], $locale), app()->getLocale());
     }
 
     /**
@@ -887,9 +896,9 @@ class GeneralSettings extends Page implements HasForms
         $options = [];
         if (function_exists('VentureDrake\\LaravelCrm\\Http\\Helpers\\SelectOptions\\countries')) {
             foreach (\VentureDrake\LaravelCrm\Http\Helpers\SelectOptions\countries() as $entry) {
-                $name = $entry['name'] ?? null;
-                if ($name) {
-                    $options[$name] = $name;
+                // The id is the stored value; the helper already named it in the reader's locale.
+                if (! empty($entry['id'])) {
+                    $options[$entry['id']] = $entry['name'];
                 }
             }
         }
@@ -939,34 +948,37 @@ class GeneralSettings extends Page implements HasForms
     protected static function phoneTypeOptions(): array
     {
         if (function_exists('VentureDrake\\LaravelCrm\\Http\\Helpers\\SelectOptions\\phoneTypes')) {
-            $opts = \VentureDrake\LaravelCrm\Http\Helpers\SelectOptions\phoneTypes();
-            if (! empty($opts)) {
-                return $opts;
-            }
+            // The helper's id/name list is for the Livewire forms; a Select reads a flat map.
+            return collect(\VentureDrake\LaravelCrm\Http\Helpers\SelectOptions\phoneTypes(false))
+                ->mapWithKeys(fn (array $type): array => [
+                    $type['id'] => __('laravel-crm-filament::labels.misc.'.$type['id']),
+                ])
+                ->all();
         }
 
         return [
-            'work' => 'Work',
-            'home' => 'Home',
-            'mobile' => 'Mobile',
-            'fax' => 'Fax',
-            'other' => 'Other',
+            'work' => __('laravel-crm-filament::labels.misc.work'),
+            'home' => __('laravel-crm-filament::labels.misc.home'),
+            'mobile' => __('laravel-crm-filament::labels.misc.mobile'),
+            'fax' => __('laravel-crm-filament::labels.misc.fax'),
+            'other' => __('laravel-crm-filament::labels.misc.other'),
         ];
     }
 
     protected static function emailTypeOptions(): array
     {
         if (function_exists('VentureDrake\\LaravelCrm\\Http\\Helpers\\SelectOptions\\emailTypes')) {
-            $opts = \VentureDrake\LaravelCrm\Http\Helpers\SelectOptions\emailTypes();
-            if (! empty($opts)) {
-                return $opts;
-            }
+            return collect(\VentureDrake\LaravelCrm\Http\Helpers\SelectOptions\emailTypes(false))
+                ->mapWithKeys(fn (array $type): array => [
+                    $type['id'] => __('laravel-crm-filament::labels.misc.'.$type['id']),
+                ])
+                ->all();
         }
 
         return [
-            'work' => 'Work',
-            'home' => 'Home',
-            'other' => 'Other',
+            'work' => __('laravel-crm-filament::labels.misc.work'),
+            'home' => __('laravel-crm-filament::labels.misc.home'),
+            'other' => __('laravel-crm-filament::labels.misc.other'),
         ];
     }
 }

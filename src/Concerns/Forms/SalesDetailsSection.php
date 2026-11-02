@@ -79,12 +79,14 @@ class SalesDetailsSection
 
         if ($opts['title']) {
             $components[] = Forms\Components\TextInput::make('title')
+                ->label(__('laravel-crm-filament::labels.fields.title'))
                 ->required()
                 ->maxLength(255);
         }
 
         if ($opts['description']) {
             $components[] = Forms\Components\Textarea::make('description')
+                ->label(__('laravel-crm-filament::labels.fields.description'))
                 ->rows(5)
                 ->columnSpanFull();
         }
@@ -127,6 +129,7 @@ class SalesDetailsSection
 
         if ($opts['terms']) {
             $components[] = Forms\Components\Textarea::make('terms')
+                ->label(__('laravel-crm-filament::labels.fields.terms'))
                 ->rows(5)
                 ->columnSpanFull();
         }
@@ -134,7 +137,7 @@ class SalesDetailsSection
         if ($opts['stage']) {
             $components[] = Forms\Components\Select::make('pipeline_stage_id')
                 ->label(__('laravel-crm-filament::labels.sales.pipeline_stage'))
-                ->options(fn () => PipelineStage::query()->orderBy('order')->pluck('name', 'id'))
+                ->options(fn () => PipelineStage::query()->orderBy('order')->get()->mapWithKeys(fn (PipelineStage $stage) => [$stage->id => $stage->name]))
                 ->searchable()
                 ->preload();
         }

@@ -6,6 +6,7 @@ use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 use Livewire\Attributes\Url;
@@ -42,6 +43,16 @@ class TemplateSettings extends Page
     protected static ?string $title = 'Templates';
 
     protected static ?string $slug = 'templates';
+
+    public function getTitle(): string | Htmlable
+    {
+        return __('laravel-crm-filament::labels.sections.templates');
+    }
+
+    public static function getNavigationLabel(): string | Htmlable
+    {
+        return __('laravel-crm-filament::labels.sections.templates');
+    }
 
     /**
      * Directly below General settings (10) and above Roles (20) — Templates is

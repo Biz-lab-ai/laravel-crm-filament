@@ -96,7 +96,7 @@
                                    class="crm-call-card-link">
                                     <div class="crm-call-card-title">{{ $call->name }}</div>
                                     @if ($call->start_at)
-                                        <div class="crm-call-card-meta">{{ $call->start_at->format('M j, Y H:i') }}</div>
+                                        <div class="crm-call-card-meta">{{ $call->start_at->format('d.m.Y H:i') }}</div>
                                     @endif
                                 </a>
                             </div>

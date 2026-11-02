@@ -17,7 +17,10 @@ class NotesRelationManager extends RelationManager
 
     protected static string $relationship = 'notes';
 
-    protected static ?string $title = 'Notes';
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return __('laravel-crm-filament::labels.entities.notes');
+    }
 
     public function form(Schema $schema): Schema
     {

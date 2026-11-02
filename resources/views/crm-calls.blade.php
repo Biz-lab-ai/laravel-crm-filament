@@ -80,7 +80,7 @@
                                 <button
                                     type="button"
                                     wire:click="deleteCall({{ $call->id }})"
-                                    wire:confirm="Delete this call?"
+                                    wire:confirm="{{ __('laravel-crm-filament::labels.actions.delete_this', ['entity' => __('laravel-crm-filament::labels.entities.call')]) }}"
                                     @click="open = false"
                                     class="crm-card-dropdown-item crm-card-dropdown-item--danger"
                                     role="menuitem"
@@ -92,10 +92,10 @@
                 <div class="crm-card-badges">
                     @include('laravel-crm-filament::partials.crm-related-badge', ['related' => $isRelated])
                     @if ($call->start_at)
-                        <span class="crm-card-pill">{{ __('laravel-crm-filament::labels.money.start_at') }} {{ $call->start_at->format('h:i A') }} on {{ $call->start_at->format('M d, Y') }}</span>
+                        <span class="crm-card-pill">{{ __('laravel-crm-filament::labels.money.start_at') }} {{ $call->start_at->format('H:i') }} · {{ $call->start_at->format('d.m.Y') }}</span>
                     @endif
                     @if ($call->finish_at)
-                        <span class="crm-card-pill">{{ __('laravel-crm-filament::labels.money.finish_at') }} {{ $call->finish_at->format('h:i A') }} on {{ $call->finish_at->format('M d, Y') }}</span>
+                        <span class="crm-card-pill">{{ __('laravel-crm-filament::labels.money.finish_at') }} {{ $call->finish_at->format('H:i') }} · {{ $call->finish_at->format('d.m.Y') }}</span>
                     @endif
                 </div>
 
@@ -131,6 +131,6 @@
             @endif
         </div>
     @empty
-        <div class="crm-card-empty">No calls yet.</div>
+        <div class="crm-card-empty">{{ __('laravel-crm-filament::labels.sections.no_calls_yet') }}</div>
     @endforelse
 </div>
